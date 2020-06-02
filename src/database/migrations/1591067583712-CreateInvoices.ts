@@ -1,11 +1,15 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from 'typeorm';
 
-export default class CreateCodigosBarras1590963884465
-  implements MigrationInterface {
+export default class CreateInvoices1591067583712 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'codigos_barras',
+        name: 'invoices',
         columns: [
           {
             name: 'id',
@@ -15,42 +19,30 @@ export default class CreateCodigosBarras1590963884465
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'codigo_produto',
+            name: 'order_id',
+            type: 'uuid',
+          },
+          {
+            name: 'invoice_number',
             type: 'integer',
           },
           {
-            name: 'codigo_barras',
-            type: 'integer',
-          },
-          {
-            name: 'qtde_embalagem',
-            type: 'integer',
-            default: 1,
-          },
-          {
-            name: 'descricao_embalagem',
-            type: 'varchar',
-          },
-          {
-            name: 'sku',
-            type: 'varchar',
-            isNullable: true,
-          },
-          {
-            name: 'unidade_medida',
-            type: 'varchar',
-          },
-          {
-            name: 'preco_custo_embalagem',
+            name: 'invoice_amount',
             type: 'decimal',
             precision: 15,
-            scale: 10,
+            scale: 2,
           },
           {
-            name: 'preco_venda_embalagem',
+            name: 'invoice_discount',
             type: 'decimal',
             precision: 15,
-            scale: 10,
+            scale: 2,
+          },
+          {
+            name: 'net_invoice_amount',
+            type: 'decimal',
+            precision: 15,
+            scale: 2,
           },
           {
             name: 'created_at',
@@ -65,9 +57,21 @@ export default class CreateCodigosBarras1590963884465
         ],
       }),
     );
+
+    await queryRunner.createForeignKey(
+      'invoices',
+      new TableForeignKey({
+        name: 'InvoiceOrder',
+        columnNames: ['order_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'orders',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('codigos_barras');
+    await queryRunner.dropTable('invoices');
   }
 }

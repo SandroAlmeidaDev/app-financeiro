@@ -1,15 +1,10 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableForeignKey,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export default class CreateFaturas1590963947932 implements MigrationInterface {
+export default class CreateBarCodes1591064873463 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'faturas',
+        name: 'bar_codes',
         columns: [
           {
             name: 'id',
@@ -19,30 +14,42 @@ export default class CreateFaturas1590963947932 implements MigrationInterface {
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'pedido_id',
-            type: 'uuid',
-          },
-          {
-            name: 'numero_fatura',
+            name: 'product_code',
             type: 'integer',
           },
           {
-            name: 'valor_total',
-            type: 'decimal',
-            precision: 15,
-            scale: 2,
+            name: 'bar_code',
+            type: 'integer',
           },
           {
-            name: 'valor_desconto',
-            type: 'decimal',
-            precision: 15,
-            scale: 2,
+            name: 'packing',
+            type: 'integer',
+            default: 1,
           },
           {
-            name: 'valor_liquido',
+            name: 'pack_description',
+            type: 'varchar',
+          },
+          {
+            name: 'sku',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'packing_unit',
+            type: 'varchar',
+          },
+          {
+            name: 'pack_cost_price',
             type: 'decimal',
             precision: 15,
-            scale: 2,
+            scale: 10,
+          },
+          {
+            name: 'pack_sale_price',
+            type: 'decimal',
+            precision: 15,
+            scale: 10,
           },
           {
             name: 'created_at',
@@ -57,21 +64,9 @@ export default class CreateFaturas1590963947932 implements MigrationInterface {
         ],
       }),
     );
-
-    await queryRunner.createForeignKey(
-      'faturas',
-      new TableForeignKey({
-        name: 'FaturaPedido',
-        columnNames: ['pedido_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'pedidos',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      }),
-    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('faturas');
+    await queryRunner.dropTable('bar_codes');
   }
 }

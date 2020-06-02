@@ -5,12 +5,12 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export default class CreateProdutosPedidos1590963918248
+export default class CreateOrderingProducts1591066708875
   implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'produtos_pedidos',
+        name: 'ordering_products',
         columns: [
           {
             name: 'id',
@@ -20,39 +20,40 @@ export default class CreateProdutosPedidos1590963918248
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'empresa_id',
+            name: 'company_id',
             type: 'uuid',
           },
           {
-            name: 'produto_id',
+            name: 'product_id',
             type: 'uuid',
           },
           {
-            name: 'numero_pedido',
+            name: 'order_number',
             type: 'integer',
           },
           {
-            name: 'qtde_pedido',
+            name: 'order_quantity',
             type: 'decimal',
             precision: 10,
             scale: 6,
           },
           {
-            name: 'qtde_embalagem',
+            name: 'order_pack',
             type: 'integer',
           },
           {
-            name: 'valor_unitario',
+            name: 'unitary_value',
             type: 'decimal',
             precision: 15,
             scale: 10,
           },
           {
-            name: 'valor_desconto',
+            name: 'discount_amount',
             type: 'decimal',
             precision: 10,
             scale: 6,
           },
+          // Campos referente a impostos
           {
             name: 'ipi_codigo_enquadramento_legal',
             type: 'integer',
@@ -196,19 +197,19 @@ export default class CreateProdutosPedidos1590963918248
     );
 
     await queryRunner.createForeignKey(
-      'produtos_pedidos',
+      'ordering_products',
       new TableForeignKey({
-        columnNames: ['empresa_id'],
+        columnNames: ['company_id'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'empresas',
-        name: 'PedidoEmpresa',
-        onDelete: 'SET NULL',
+        referencedTableName: 'companies',
+        name: 'OrderingProductCompany',
+        onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('produtos_pedidos');
+    await queryRunner.dropTable('ordering_products');
   }
 }

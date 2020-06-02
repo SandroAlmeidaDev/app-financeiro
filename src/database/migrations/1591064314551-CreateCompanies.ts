@@ -1,10 +1,11 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export default class CreateEmpresas1590963855828 implements MigrationInterface {
+export default class CreateCompanies1591064314551
+  implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'empresas',
+        name: 'companies',
         columns: [
           {
             name: 'id',
@@ -18,52 +19,54 @@ export default class CreateEmpresas1590963855828 implements MigrationInterface {
             type: 'integer',
           },
           {
-            name: 'inscrical_estadual',
+            name: 'state_registration',
             type: 'varchar',
           },
           {
-            name: 'razao_social',
+            name: 'comapany_name',
             type: 'varchar',
           },
           {
-            name: 'nome_fantasia',
+            name: 'fantasy_name',
             type: 'varchar',
           },
           {
-            name: 'endereco',
+            name: 'adress',
             type: 'varchar',
           },
           {
-            name: 'numero',
+            name: 'number',
             type: 'varchar',
           },
           {
-            name: 'bairro',
+            name: 'district',
             type: 'varchar',
           },
           {
-            name: 'complemento',
+            name: 'complement',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'zip_code',
             type: 'varchar',
           },
           {
-            name: 'cep',
+            name: 'city',
             type: 'varchar',
           },
           {
-            name: 'cidade',
+            name: 'state',
             type: 'varchar',
           },
           {
-            name: 'estado',
+            name: 'commercial_phone',
             type: 'varchar',
           },
           {
-            name: 'telefone_comercial',
+            name: 'cell_phone',
             type: 'varchar',
-          },
-          {
-            name: 'telefone_celular',
-            type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'email',
@@ -75,11 +78,11 @@ export default class CreateEmpresas1590963855828 implements MigrationInterface {
             type: 'varchar',
           },
           {
-            name: 'foto',
+            name: 'avatar',
             type: 'varchar',
           },
           {
-            name: 'tipo_empresa',
+            name: 'company_type',
             type: 'varchar',
           },
           {
@@ -98,6 +101,6 @@ export default class CreateEmpresas1590963855828 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('empresas');
+    await queryRunner.dropTable('companies');
   }
 }

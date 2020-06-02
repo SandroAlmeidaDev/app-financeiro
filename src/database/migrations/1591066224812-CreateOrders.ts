@@ -5,11 +5,11 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export default class CreatePedidos1590963865050 implements MigrationInterface {
+export default class CreateOrders1591066224812 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'pedidos',
+        name: 'orders',
         columns: [
           {
             name: 'id',
@@ -19,7 +19,7 @@ export default class CreatePedidos1590963865050 implements MigrationInterface {
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'empresa_id',
+            name: 'company_id',
             type: 'uuid',
             isNullable: true,
           },
@@ -29,33 +29,33 @@ export default class CreatePedidos1590963865050 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'numero_pedido',
+            name: 'order_number',
             type: 'integer',
           },
           {
-            name: 'status_pedido',
+            name: 'status',
             type: 'varchar',
           },
           {
-            name: 'tipo_pedido',
+            name: 'order_type',
             type: 'varchar',
           },
           {
-            name: 'valor_total',
+            name: 'amount',
             type: 'decimal',
             precision: 10,
             scale: 2,
           },
           {
-            name: 'data_emissao',
+            name: 'order_issue_date',
             type: 'timestamp with time zone',
           },
           {
-            name: 'data_entrega',
+            name: 'order_delivery_date',
             type: 'timestamp with time zone',
           },
           {
-            name: 'data_recebimento',
+            name: 'receiving_date',
             type: 'timestamp with time zone',
           },
           {
@@ -63,7 +63,7 @@ export default class CreatePedidos1590963865050 implements MigrationInterface {
             type: 'varchar',
           },
           {
-            name: 'tipo_frete',
+            name: 'freight_type',
             type: 'integer',
           },
           {
@@ -81,31 +81,31 @@ export default class CreatePedidos1590963865050 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      'pedidos',
+      'orders',
       new TableForeignKey({
-        columnNames: ['empresa_id'],
+        columnNames: ['company_id'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'empresas',
-        name: 'PedidoEmpresa',
-        onDelete: 'SET NULL',
+        referencedTableName: 'companies',
+        name: 'OrderCompany',
+        onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       }),
     );
 
     await queryRunner.createForeignKey(
-      'pedidos',
+      'orders',
       new TableForeignKey({
         columnNames: ['user_id'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'usuarios',
+        referencedTableName: 'users',
         name: 'PedidoUser',
-        onDelete: 'SET NULL',
+        onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('pedidos');
+    await queryRunner.dropTable('orders');
   }
 }

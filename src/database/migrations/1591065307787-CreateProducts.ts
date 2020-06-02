@@ -1,10 +1,15 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from 'typeorm';
 
-export default class CreateProdutos1590963875633 implements MigrationInterface {
+export default class CreateProducts1591065307787 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'produtos',
+        name: 'products',
         columns: [
           {
             name: 'id',
@@ -14,35 +19,35 @@ export default class CreateProdutos1590963875633 implements MigrationInterface {
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'codigo_produto',
+            name: 'product_code',
             type: 'integer',
           },
           {
-            name: 'codigo_barras_id',
+            name: 'bar_code_id',
             type: 'uuid',
           },
           {
-            name: 'descricao',
+            name: 'description',
             type: 'varchar',
           },
           {
-            name: 'unidade_medida',
+            name: 'unit_measure',
             type: 'varchar',
           },
           {
-            name: 'estoque',
+            name: 'stock',
             type: 'decimal',
             precision: 15,
             scale: 10,
           },
           {
-            name: 'preco_custo',
+            name: 'cost_price',
             type: 'decimal',
             precision: 15,
             scale: 10,
           },
           {
-            name: 'preco_venda',
+            name: 'sale_price',
             type: 'decimal',
             precision: 15,
             scale: 10,
@@ -58,7 +63,7 @@ export default class CreateProdutos1590963875633 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'data_venda',
+            name: 'registration_date',
             type: 'date',
             isNullable: true,
           },
@@ -71,48 +76,48 @@ export default class CreateProdutos1590963875633 implements MigrationInterface {
             type: 'integer',
           },
           {
-            name: 'aliquota_icms_venda',
+            name: 'icms_tax_sale',
             type: 'varchar',
             isNullable: true,
           },
           {
-            name: 'aliquota_icms_compra',
+            name: 'icms_tax_purchase',
             type: 'varchar',
             isNullable: true,
           },
           {
-            name: 'tributacao',
+            name: 'taxation',
             type: 'varchar',
             isNullable: true,
           },
           {
-            name: 'tipo_pis_cofins',
+            name: 'type_pis_cofins',
             type: 'varchar',
             isNullable: true,
           },
           {
-            name: 'natureza_pis_cofins',
+            name: 'nature_pis_cofins',
             type: 'integer',
             isNullable: true,
           },
           {
-            name: 'tipo_ipi',
+            name: 'type_ipi',
             type: 'varchar',
             isNullable: true,
           },
           {
-            name: 'valor_ipi',
+            name: 'ipi_value',
             type: 'decimal',
             precision: 10,
             scale: 10,
           },
           {
-            name: 'tipo_fiscal',
+            name: 'fiscal_type',
             type: 'varchar',
             isNullable: true,
           },
           {
-            name: 'foto',
+            name: 'product_avatar',
             type: 'varchar',
             isNullable: true,
           },
@@ -129,9 +134,21 @@ export default class CreateProdutos1590963875633 implements MigrationInterface {
         ],
       }),
     );
+
+    await queryRunner.createForeignKey(
+      'products',
+      new TableForeignKey({
+        name: 'ProductBarCode',
+        columnNames: ['bar_code_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'bar_codes',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('produtos');
+    await queryRunner.dropTable('products');
   }
 }

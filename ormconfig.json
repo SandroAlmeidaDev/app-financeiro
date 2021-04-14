@@ -1,17 +1,13 @@
 {
   "type": "postgres",
   "host": "localhost",
-  "port": 5433,
+  "port": "5432",
   "username": "postgres",
-  "password": "gospy",
-  "database": "gosspy",
-  "entities": [
-    "./src/models/*.ts"
-  ],
-  "migrations": [
-    "./src/database/migrations/*.ts"
-  ],
+  "password": "docker",
+  "database": "cristal",
+  "entities": ["./src/modules/**/infra/typeorm/entities/*.ts"],
+  "migrations": ["./src/shared/infra/typeorm/migrations/*.ts"],
   "cli": {
-    "migrationsDir": "./src/database/migrations"
+    "migrationsDir": "./src/shared/infra/typeorm/migrations"
   }
 }

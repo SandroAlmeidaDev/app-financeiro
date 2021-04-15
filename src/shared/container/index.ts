@@ -24,6 +24,18 @@ import OrdersRepository from '@modules/orders/infra/typeorm/repositories/OrdersR
 import IPurchaseOrdersRepository from '@modules/purchase_orders/repositories/IPurchaseOrdersRepository';
 import PurchaseOrdersRepository from '@modules/purchase_orders/infra/typeorm/repositories/PurchaseOrdersRepository';
 
+import ICheckoutsRepository from '@modules/sales/repositories/ICheckoutsRepository';
+import CheckoutsRepository from '@modules/sales/infra/typeorm/repositories/CkeckoutsRepository';
+
+import CheckoutsSalesCouponsRepository from '@modules/sales/infra/typeorm/repositories/CheckoutsSalesCouponsRepository';
+import ICheckoutsSalesCouponsRepository from '@modules/sales/repositories/ICheckoutsSalesCouponsRepository';
+
+import ICheckoutsTransactionsRepository from '@modules/sales/repositories/ICheckoutsTransactionsRepository';
+import CheckoutsTransactionsRepository from '@modules/sales/infra/typeorm/repositories/CheckoutsTransactionsRepository';
+
+import ICouponProductsRepository from '@modules/sales/repositories/ICouponProductsRepository';
+import CouponsProductsRepository from '@modules/sales/infra/typeorm/repositories/CouponsProductsRepository';
+
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
   UsersRepository,
@@ -57,4 +69,24 @@ container.registerSingleton<IOrdersRepository>(
 container.registerSingleton<IPurchaseOrdersRepository>(
   'PurchaseOrdersRepository',
   PurchaseOrdersRepository,
+);
+
+container.registerSingleton<ICheckoutsRepository>(
+  'CheckoutsRepository',
+  CheckoutsRepository,
+);
+
+container.registerSingleton<ICheckoutsSalesCouponsRepository>(
+  'CheckoutsSalesCouponsRepository',
+  CheckoutsSalesCouponsRepository,
+);
+
+container.registerSingleton<ICheckoutsTransactionsRepository>(
+  'CheckoutsTransactionsRepository',
+  CheckoutsTransactionsRepository,
+);
+
+container.registerSingleton<ICouponProductsRepository>(
+  'CouponProductRepository',
+  CouponsProductsRepository,
 );

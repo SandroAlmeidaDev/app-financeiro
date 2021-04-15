@@ -45,11 +45,6 @@ export default class CreateCheckoutsSalesCoupons1618431166793
             isNullable: true,
           },
           {
-            name: 'time_end',
-            type: 'char',
-            isNullable: true,
-          },
-          {
             name: 'customer_id',
             type: 'varchar',
             isNullable: true,

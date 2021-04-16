@@ -15,7 +15,7 @@ export default class CreateCheckoutsSalesCoupons1618431166793
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'comapany_id',
+            name: 'company_id',
             type: 'uuid',
           },
           {
@@ -32,7 +32,7 @@ export default class CreateCheckoutsSalesCoupons1618431166793
           },
           {
             name: 'status',
-            type: 'char',
+            type: 'varchar',
             isNullable: true,
           },
           {
@@ -41,7 +41,7 @@ export default class CreateCheckoutsSalesCoupons1618431166793
           },
           {
             name: 'time_start',
-            type: 'char',
+            type: 'varchar',
             isNullable: true,
           },
           {

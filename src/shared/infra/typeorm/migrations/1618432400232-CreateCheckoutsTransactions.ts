@@ -15,7 +15,7 @@ export default class CreateCheckoutsTransactions1618432400232
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'comapany_id',
+            name: 'company_id',
             type: 'uuid',
           },
           {
@@ -32,7 +32,7 @@ export default class CreateCheckoutsTransactions1618432400232
           },
           {
             name: 'type',
-            type: 'char',
+            type: 'varchar',
             isNullable: true,
           },
           {

@@ -15,7 +15,7 @@ export default class CreateCouponsProducts1618444833475
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'comapany_id',
+            name: 'company_id',
             type: 'uuid',
           },
           {

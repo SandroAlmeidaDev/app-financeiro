@@ -10,6 +10,5 @@ export default interface ICheckoutSaleCouponsSalesCouponsRepository {
     company_id: string,
     checkout_id: string,
     coupon: number,
-    sale_date: Date,
   ): Promise<CheckoutSaleCoupon | undefined>;
 }

@@ -16,7 +16,7 @@ export default class CreateCompanies1591064314551
           },
           {
             name: 'cnpj',
-            type: 'integer',
+            type: 'bigint',
           },
           {
             name: 'company_code',
@@ -76,10 +76,6 @@ export default class CreateCompanies1591064314551
           },
           {
             name: 'email',
-            type: 'varchar',
-          },
-          {
-            name: 'avatar',
             type: 'varchar',
           },
           {

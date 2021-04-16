@@ -33,7 +33,6 @@ class CreateOrUpdateCheckoutSaleCouponService {
       data.company_id,
       data.checkout_id,
       data.coupon,
-      data.sale_date,
     );
 
     if (checkCouponExists) {

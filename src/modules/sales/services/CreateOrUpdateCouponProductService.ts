@@ -7,6 +7,7 @@ import ICouponProductsRepository from '../repositories/ICouponProductsRepository
 interface IRequest {
   company_id: string;
   checkout_id: string;
+  coupon_id: string;
   operator: number;
   coupon: number;
   erp_product_id: number;
@@ -19,7 +20,7 @@ interface IRequest {
   sale_date: Date;
   erp_offer_id?: string;
   is_canceled: boolean;
-  order?: number;
+  order: number;
   erp_customer_id?: number;
   erp_seller_id?: number;
   erp_department_id: number;
@@ -39,20 +40,24 @@ interface IRequest {
 @injectable()
 class CreateOrUpdateCouponProductService {
   constructor(
-    @inject('CouponProductsRepository')
-    private couponProductsRepository: ICouponProductsRepository,
+    @inject('CouponsProductsRepository')
+    private couponsProductsRepository: ICouponProductsRepository,
   ) {}
 
   public async execute(data: IRequest): Promise<CouponProduct | UpdateResult> {
-    const checkCouponProductsExists = await this.couponProductsRepository.findCouponProducts(
+    const checkCouponProductsExists = await this.couponsProductsRepository.findCouponProducts(
       data.company_id,
       data.checkout_id,
-      data.coupon,
+      data.coupon_id,
+      data.erp_product_id,
+      data.bar_code,
+      data.order,
+      data.operator,
       data.sale_date,
     );
 
     if (checkCouponProductsExists) {
-      const saleCouponUpdated = await this.couponProductsRepository.update(
+      const saleCouponUpdated = await this.couponsProductsRepository.update(
         checkCouponProductsExists.id,
         data,
       );
@@ -60,7 +65,9 @@ class CreateOrUpdateCouponProductService {
       return saleCouponUpdated;
     }
 
-    const checkoutSaleCoupon = await this.couponProductsRepository.create(data);
+    const checkoutSaleCoupon = await this.couponsProductsRepository.create(
+      data,
+    );
 
     return checkoutSaleCoupon;
   }

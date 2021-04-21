@@ -20,32 +20,37 @@ export default class CreateCompanies1591064314551
           },
           {
             name: 'company_code',
-            type: 'integer',
+            type: 'int',
             isNullable: true,
           },
           {
             name: 'state_registration',
             type: 'varchar',
+            isNullable: true,
           },
           {
-            name: 'comapany_name',
+            name: 'company_name',
             type: 'varchar',
           },
           {
             name: 'fantasy_name',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'adress',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'number',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'district',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'complement',
@@ -55,14 +60,17 @@ export default class CreateCompanies1591064314551
           {
             name: 'zip_code',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'city',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'state',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'commercial_phone',
@@ -77,10 +85,12 @@ export default class CreateCompanies1591064314551
           {
             name: 'email',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'company_type',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'created_at',

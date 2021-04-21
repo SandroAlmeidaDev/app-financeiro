@@ -1,6 +1,7 @@
 export default interface ICreateCouponProductDTO {
   company_id: string;
   checkout_id: string;
+  coupon_id: string;
   operator: number;
   coupon: number;
   erp_product_id: number;

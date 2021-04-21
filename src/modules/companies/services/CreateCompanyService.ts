@@ -9,7 +9,7 @@ interface IRequest {
   cnpj: number;
   company_code: number;
   state_registration: string;
-  comapany_name: string;
+  company_name: string;
   fantasy_name: string;
   adress: string;
   number: string;
@@ -35,6 +35,8 @@ class CreateCompanyService {
     const checkCompanyExists = await this.companiesRepository.findByCnpj(
       companyData.cnpj,
     );
+
+    console.log(companyData);
 
     if (checkCompanyExists) {
       throw new AppError('This cnpj is already registered');

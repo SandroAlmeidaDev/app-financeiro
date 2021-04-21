@@ -14,14 +14,22 @@ class CouponsProductsRepository implements ICouponProductsRepository {
   public async findCouponProducts(
     company_id: string,
     checkout_id: string,
-    coupon: number,
+    coupon_id: string,
+    erp_product_id: number,
+    bar_code: number,
+    order: number,
+    operator: number,
     sale_date: Date,
   ): Promise<CouponProduct | undefined> {
     const findCoupon = await this.ormRepository.findOne({
       where: {
         company_id,
         checkout_id,
-        coupon,
+        coupon_id,
+        erp_product_id,
+        bar_code,
+        order,
+        operator,
         sale_date,
       },
     });

@@ -23,6 +23,10 @@ export default class CreateCouponsProducts1618444833475
             type: 'uuid',
           },
           {
+            name: 'coupon_id',
+            type: 'uuid',
+          },
+          {
             name: 'coupon',
             type: 'bigint',
           },
@@ -51,6 +55,7 @@ export default class CreateCouponsProducts1618444833475
             type: 'decimal',
             precision: 20,
             scale: 6,
+            isNullable: true,
           },
           {
             name: 'total_price',
@@ -60,7 +65,7 @@ export default class CreateCouponsProducts1618444833475
           },
           {
             name: 'hour',
-            type: 'char',
+            type: 'varchar',
             isNullable: true,
           },
           {
@@ -69,7 +74,7 @@ export default class CreateCouponsProducts1618444833475
           },
           {
             name: 'erp_offer_id',
-            type: 'char',
+            type: 'varchar',
             isNullable: true,
           },
           {
@@ -114,27 +119,27 @@ export default class CreateCouponsProducts1618444833475
           },
           {
             name: 'type_price',
-            type: 'char',
+            type: 'varchar',
             isNullable: true,
           },
           {
             name: 'type_taxation',
-            type: 'char',
+            type: 'varchar',
             isNullable: true,
           },
           {
             name: 'model_doc',
-            type: 'char',
+            type: 'varchar',
             isNullable: true,
           },
           {
             name: 'motive_discount',
-            type: 'char',
+            type: 'varchar',
             isNullable: true,
           },
           {
             name: 'serie_nf',
-            type: 'char',
+            type: 'varchar',
             isNullable: true,
           },
           {
@@ -175,7 +180,7 @@ export default class CreateCouponsProducts1618444833475
         foreignKeys: [
           {
             name: 'CompanyCouponsProducts',
-            columnNames: ['comapany_id'],
+            columnNames: ['company_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'companies',
             onUpdate: 'CASCADE',
@@ -186,6 +191,14 @@ export default class CreateCouponsProducts1618444833475
             columnNames: ['checkout_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'checkouts',
+            onUpdate: 'CASCADE',
+            onDelete: 'SET NULL',
+          },
+          {
+            name: 'CheckoutsSalesCoupons',
+            columnNames: ['coupon_id'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'checkouts_sales_coupons',
             onUpdate: 'CASCADE',
             onDelete: 'SET NULL',
           },

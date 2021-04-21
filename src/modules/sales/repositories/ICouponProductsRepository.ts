@@ -9,7 +9,11 @@ export default interface ICouponProducstRepository {
   findCouponProducts(
     company_id: string,
     checkout_id: string,
-    coupon: number,
+    coupon_id: string,
+    erp_product_id: number,
+    bar_code: number,
+    order: number,
+    operator: number,
     sale_date: Date,
   ): Promise<CouponProduct | undefined>;
 }

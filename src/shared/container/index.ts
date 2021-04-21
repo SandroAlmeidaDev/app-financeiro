@@ -87,6 +87,6 @@ container.registerSingleton<ICheckoutsTransactionsRepository>(
 );
 
 container.registerSingleton<ICouponProductsRepository>(
-  'CouponProductRepository',
+  'CouponsProductsRepository',
   CouponsProductsRepository,
 );

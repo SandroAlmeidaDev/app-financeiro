@@ -16,12 +16,14 @@ class CheckoutsSalesCouponsRepository
     company_id: string,
     checkout_id: string,
     coupon: number,
+    sale_date: Date,
   ): Promise<CheckoutSaleCoupon | undefined> {
     const findSaleCoupon = this.ormRepository.findOne({
       where: {
         company_id,
         checkout_id,
         coupon,
+        sale_date,
       },
     });
 

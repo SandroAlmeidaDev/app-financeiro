@@ -18,6 +18,9 @@ class CouponProduct {
   checkout_id: string;
 
   @Column()
+  coupon_id: string;
+
+  @Column()
   operator: number;
 
   @Column()

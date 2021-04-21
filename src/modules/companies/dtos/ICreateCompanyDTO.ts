@@ -2,7 +2,7 @@ export default interface ICreateCompanyDTO {
   cnpj: number;
   company_code: number;
   state_registration: string;
-  comapany_name: string;
+  company_name: string;
   fantasy_name: string;
   adress: string;
   number: string;

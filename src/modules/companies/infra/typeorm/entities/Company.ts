@@ -18,7 +18,10 @@ class Company {
   state_registration: string;
 
   @Column()
-  comapany_name: string;
+  company_name: string;
+
+  @Column()
+  company_code: number;
 
   @Column()
   fantasy_name: string;

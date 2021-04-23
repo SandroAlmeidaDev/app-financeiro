@@ -36,8 +36,6 @@ class CreateCompanyService {
       companyData.cnpj,
     );
 
-    console.log(companyData);
-
     if (checkCompanyExists) {
       throw new AppError('This cnpj is already registered');
     }

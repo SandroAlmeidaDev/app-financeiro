@@ -31,9 +31,9 @@ class CheckoutsSalesCouponsRepository
   }
 
   public async create(
-    checkoutData: ICreateCheckoutSaleCouponDTO,
+    data: ICreateCheckoutSaleCouponDTO,
   ): Promise<CheckoutSaleCoupon> {
-    const checkout = this.ormRepository.create(checkoutData);
+    const checkout = this.ormRepository.create(data);
 
     await this.ormRepository.save(checkout);
 

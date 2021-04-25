@@ -15,14 +15,14 @@ class CheckoutsTransactionsRepository
   public async findTransaction(
     company_id: string,
     checkout_id: string,
-    coupon: number,
+    coupon_id: string,
     sale_date: Date,
   ): Promise<CheckoutTransaction | undefined> {
     const findTransactionCoupon = await this.ormRepository.findOne({
       where: {
         company_id,
         checkout_id,
-        coupon,
+        coupon_id,
         sale_date,
       },
     });

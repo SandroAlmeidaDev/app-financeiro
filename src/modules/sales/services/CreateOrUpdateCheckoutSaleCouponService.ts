@@ -9,6 +9,8 @@ interface IRequest {
   checkout_id: string;
   operator: number;
   coupon: number;
+  type: 'C' | 'D';
+  origin: string;
   status?: string;
   sale_date: Date;
   time_start?: string;

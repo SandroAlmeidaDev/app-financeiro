@@ -12,7 +12,7 @@ export default interface ICheckoutsTransactionsRepository {
   findTransaction(
     company_id: string,
     checkout_id: string,
-    coupon: number,
+    coupon_id: string,
     data: Date,
   ): Promise<CheckoutTransaction | undefined>;
 }

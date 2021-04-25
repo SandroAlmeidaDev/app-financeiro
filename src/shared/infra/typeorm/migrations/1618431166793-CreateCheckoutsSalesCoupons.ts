@@ -31,6 +31,16 @@ export default class CreateCheckoutsSalesCoupons1618431166793
             type: 'bigint',
           },
           {
+            name: 'type',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'origin',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
             name: 'status',
             type: 'varchar',
             isNullable: true,

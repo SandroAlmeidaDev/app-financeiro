@@ -27,6 +27,12 @@ class CheckoutSaleCoupons {
   status?: string;
 
   @Column()
+  type: 'C' | 'D';
+
+  @Column()
+  origin: string;
+
+  @Column()
   sale_date: Date;
 
   @Column()
@@ -34,6 +40,9 @@ class CheckoutSaleCoupons {
 
   @Column()
   customer_id?: string;
+
+  @Column()
+  customer_cpf?: string;
 
   @Column()
   customer_name?: string;

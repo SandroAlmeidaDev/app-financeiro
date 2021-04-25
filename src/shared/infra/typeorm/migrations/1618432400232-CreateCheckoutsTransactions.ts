@@ -23,6 +23,10 @@ export default class CreateCheckoutsTransactions1618432400232
             type: 'uuid',
           },
           {
+            name: 'coupon_id',
+            type: 'uuid',
+          },
+          {
             name: 'operator',
             type: 'int',
           },
@@ -32,6 +36,16 @@ export default class CreateCheckoutsTransactions1618432400232
           },
           {
             name: 'type',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'origin',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'pay_type',
             type: 'varchar',
             isNullable: true,
           },
@@ -85,6 +99,14 @@ export default class CreateCheckoutsTransactions1618432400232
             columnNames: ['checkout_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'checkouts',
+            onUpdate: 'CASCADE',
+            onDelete: 'SET NULL',
+          },
+          {
+            name: 'CouponsCheckoutsTransaction',
+            columnNames: ['coupon_id'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'checkouts_sales_coupons',
             onUpdate: 'CASCADE',
             onDelete: 'SET NULL',
           },

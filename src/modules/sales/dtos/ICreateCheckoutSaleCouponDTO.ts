@@ -4,6 +4,8 @@ export default interface ICreateCheckoutSaleCouponDTO {
   operator: number;
   coupon: number;
   status?: string;
+  type: 'C' | 'D';
+  origin: string;
   sale_date: Date;
   time_start?: string;
   customer_id?: string;

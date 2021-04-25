@@ -2,8 +2,10 @@ export default interface ICreateCheckoutTransactionDTO {
   company_id: string;
   checkout_id: string;
   operator: number;
-  coupon: number;
-  type: string;
+  coupon_id: string;
+  type: 'C' | 'D';
+  origin: string;
+  pay_type: string;
   order: number;
   parcel: number;
   sale_date: Date;

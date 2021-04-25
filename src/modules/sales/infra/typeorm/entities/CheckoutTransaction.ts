@@ -18,6 +18,9 @@ class CheckoutTransaction {
   checkout_id: string;
 
   @Column()
+  coupon_id: string;
+
+  @Column()
   operator: number;
 
   @Column()
@@ -25,6 +28,12 @@ class CheckoutTransaction {
 
   @Column()
   type: string;
+
+  @Column()
+  origin: string;
+
+  @Column()
+  pay_type: string;
 
   @Column()
   order: number;

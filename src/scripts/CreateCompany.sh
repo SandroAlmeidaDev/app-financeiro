@@ -12,8 +12,9 @@ function createCompany() {
   COD_FILIAL=$2
 
   [[ ! -d $DIR_FILES/$CNPJ_FILIAL/config ]] && mkdir -p $DIR_FILES/$CNPJ_FILIAL/config &>/dev/null
+  [[ ! -d $DIR_FILES/$CNPJ_FILIAL/response ]] && mkdir -p $DIR_FILES/$CNPJ_FILIAL/response &>/dev/null
 
-  JSON_FILE="$DIR_FILES/$CNPJ_FILIAL/json/cadastro-filial-$CNPJ_FILIAL.json"
+  JSON_FILE="$DIR_FILES/$CNPJ_FILIAL/request/cadastro-filial-$CNPJ_FILIAL.json"
 
 	COMPANY=$(curl -s -X POST "$BASE_URL/companies" \
 		-H "content-type: application/json" \
@@ -24,7 +25,10 @@ function createCompany() {
 
   if [ ! "${COMPANY_ID}" == "null" ]
     then
-    rm -f
+    rm -f $DIR_FILES/$CGCFIL99/error-`date +%Y-%m-%d`.log
+
+    echo -ne "$COMPANY" > $DIR_FILES/$CNPJ_FILIAL/response/$COMPANY_ID.json
+
     echo -ne "COMPANY-CODE-API=$COD_FILIAL \n" > "$DIR_FILES/$CNPJ_FILIAL/config/config-api-filial-$CNPJ_FILIAL.ini"
     echo -ne "COMPANY-CNPJ-API=$CNPJ_FILIAL \n" >> "$DIR_FILES/$CNPJ_FILIAL/config/config-api-filial-$CNPJ_FILIAL.ini"
     echo -ne "COMPANY-ID-API=$COMPANY_ID \n" >> "$DIR_FILES/$CNPJ_FILIAL/config/config-api-filial-$CNPJ_FILIAL.ini"
@@ -46,13 +50,13 @@ function readCadfil() {
 
 
     echo "$DADOS_FILIAL"| while IFS='|' read -r CGCFIL99 CODFIL99 INSCFIL99 RAZSOC99 APELIDO99 ENDFIL99 NUMERFIL99 BAIRRO99 CEPFIL99 FONEFIL99 EMAIL99; do
-      mkdir -p $DIR_FILES/$CGCFIL99/json &>/dev/null
+      mkdir -p $DIR_FILES/$CGCFIL99/request &>/dev/null
 
       jo -p cnpj=$CGCFIL99 company_code=$(echo $CODFIL99| tr -d ' ') \
       state_registration="$INSCFIL99" company_name="$RAZSOC99" \
       fantasy_name="$APELIDO99" adress="$ENDFIL99" number="$NUMERFIL99" \
       district="$BAIRRO99" zip_code="$CEPFIL99" commercial_phone="$FONEFIL99" \
-      email="$EMAIL99" company_type='FILIAL' > $DIR_FILES/$CGCFIL99/json/cadastro-filial-$CGCFIL99.json
+      email="$EMAIL99" company_type='FILIAL' > $DIR_FILES/$CGCFIL99/request/cadastro-filial-$CGCFIL99.json
 
       createCompany $CGCFIL99 $CODFIL99
     done

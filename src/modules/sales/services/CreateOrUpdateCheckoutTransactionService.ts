@@ -7,14 +7,24 @@ import ICheckoutsTransactionsRepository from '../repositories/ICheckoutsTransact
 interface IRequest {
   company_id: string;
   checkout_id: string;
+  coupon_id: string;
   operator: number;
   coupon: number;
-  type: string;
+  type: 'C' | 'D';
+  sale_date: Date;
+  cancellation_status: string;
+  origin: string;
+  pay_type: string;
+  total: number;
   order: number;
   parcel: number;
-  sale_date: Date;
-  sale_due_date: Date;
-  total: number;
+  covenant_company: number;
+  authorization_number: string;
+  bin_cart: string;
+  nsu: string;
+  card_banner: string;
+  card_cnpj: string;
+  note: string;
 }
 
 @injectable()
@@ -30,7 +40,11 @@ class CreateOrUpdateCheckoutTransactionService {
     const checkTransactionExists = await this.checkoutsTransactionsRepository.findTransaction(
       data.company_id,
       data.checkout_id,
-      data.coupon,
+      data.coupon_id,
+      data.type,
+      data.origin,
+      data.pay_type,
+      data.total,
       data.sale_date,
     );
 

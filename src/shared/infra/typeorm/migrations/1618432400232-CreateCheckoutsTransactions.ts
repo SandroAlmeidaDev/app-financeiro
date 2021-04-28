@@ -35,7 +35,16 @@ export default class CreateCheckoutsTransactions1618432400232
             type: 'bigint',
           },
           {
+            name: 'sale_date',
+            type: 'date',
+          },
+          {
             name: 'type',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'cancellation_status',
             type: 'varchar',
             isNullable: true,
           },
@@ -53,19 +62,47 @@ export default class CreateCheckoutsTransactions1618432400232
             name: 'order',
             type: 'int',
             isNullable: true,
+            default: 1,
           },
           {
             name: 'parcel',
             type: 'int',
             isNullable: true,
+            default: 1,
           },
           {
-            name: 'sale_date',
-            type: 'date',
+            name: 'covenant_company',
+            type: 'bigint',
+            isNullable: true,
           },
           {
-            name: 'sale_due_date',
-            type: 'date',
+            name: 'authorization_number',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'bin_cart',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'nsu',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'card_banner',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'card_cnpj',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'note',
+            type: 'varchar',
             isNullable: true,
           },
           {
@@ -88,7 +125,7 @@ export default class CreateCheckoutsTransactions1618432400232
         foreignKeys: [
           {
             name: 'CompanyCheckoutsTransaction',
-            columnNames: ['comapany_id'],
+            columnNames: ['company_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'companies',
             onUpdate: 'CASCADE',

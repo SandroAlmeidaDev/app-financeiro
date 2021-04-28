@@ -33,7 +33,7 @@ routes.use('/purchases_orders', purchaseOrdersRouter);
 
 routes.use('/checkouts', checkoutsRouter);
 routes.use('/checkouts/sales/coupons', checkoutsSalesCouponsRouter);
-routes.use('/checkouts/transactions', checkoutsTransactionsRouter);
+routes.use('/checkouts/coupons/transactions', checkoutsTransactionsRouter);
 routes.use('/checkouts/coupons/products', couponsProductsRouter);
 
 export default routes;

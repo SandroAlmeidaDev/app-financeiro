@@ -18,7 +18,7 @@ class CheckoutTransaction {
   checkout_id: string;
 
   @Column()
-  coupon_id: string;
+  coupon_id?: string;
 
   @Column()
   operator: number;
@@ -27,7 +27,13 @@ class CheckoutTransaction {
   coupon: number;
 
   @Column()
+  sale_date: Date;
+
+  @Column()
   type: string;
+
+  @Column()
+  cancellation_status: string;
 
   @Column()
   origin: string;
@@ -36,19 +42,34 @@ class CheckoutTransaction {
   pay_type: string;
 
   @Column()
+  total: number;
+
+  @Column()
   order: number;
 
   @Column()
   parcel: number;
 
   @Column()
-  sale_date: Date;
+  covenant_company: number;
 
   @Column()
-  sale_due_date?: Date;
+  authorization_number: string;
 
   @Column()
-  total: number;
+  bin_cart: string;
+
+  @Column()
+  nsu: string;
+
+  @Column()
+  card_banner: string;
+
+  @Column()
+  card_cnpj: string;
+
+  @Column()
+  note: string;
 
   @CreateDateColumn()
   created_at: Date;

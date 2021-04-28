@@ -12,9 +12,9 @@ function createCheckout() {
   NUMERO_PDV=$2
 
   [[ ! -d $DIR_FILES/$CNPJ_FILIAL/config ]] && mkdir -p $DIR_FILES/$CNPJ_FILIAL/config &>/dev/null
-  [[ ! -d $DIR_FILES/$CNPJ_FILIAL/pdv$NUMERO_PDV/response ]] && mkdir -p $DIR_FILES/$CNPJ_FILIAL/pdv$NUMERO_PDV/response &>/dev/null
+  [[ ! -d $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response ]] && mkdir -p $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response &>/dev/null
 
-  JSON_FILE="$DIR_FILES/$CNPJ_FILIAL/pdv$NUMERO_PDV/request/cadastro-pdv-$NUMERO_PDV.json"
+  JSON_FILE="$DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/request/cadastro-pdv-$NUMERO_PDV.json"
 
 	CHECKOUT=$(curl -s -X POST "$BASE_URL/checkouts" \
 		-H "content-type: application/json" \
@@ -25,7 +25,7 @@ function createCheckout() {
 
   if [ ! "${CHECKOUT_ID_API}" == "null" ]
     then
-    echo -ne "$CHECKOUT" > $DIR_FILES/$CNPJ_FILIAL/pdv$NUMERO_PDV/response/$CHECKOUT_ID_API.json
+    echo -ne "$CHECKOUT" > $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$CHECKOUT_ID_API.json
     echo -ne "CHECKOUT-$NUMERO_PDV-ID-API=$CHECKOUT_ID_API \n" >> "$DIR_FILES/$CNPJ_FILIAL/config/config-api-filial-$CNPJ_FILIAL.ini"
   fi
 }
@@ -58,11 +58,11 @@ function readTabpdv() {
       CHECKOUT_ID_API=$(cat $DIR_FILES/$CNPJ_FILIAL/config/config-api-filial-$CNPJ_FILIAL.ini | grep "CHECKOUT-$NUMERO-ID-API" | cut -d "=" -f2)
 
       if [[ ! -z $COMPANY_ID ]]; then
-        mkdir -p $DIR_FILES/$CNPJ_FILIAL/pdv$NUMERO/request
+        mkdir -p $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO/request
 
         jo -p company_id=$COMPANY_ID \
           number=$NUMERO \
-          status="$STATUS" > $DIR_FILES/$CNPJ_FILIAL/pdv$NUMERO/request/cadastro-pdv-$NUMERO.json
+          status="$STATUS" > $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO/request/cadastro-pdv-$NUMERO.json
 
           createCheckout $CNPJ_FILIAL $NUMERO
       else

@@ -31,6 +31,10 @@ export default class CreateCheckoutsSalesCoupons1618431166793
             type: 'bigint',
           },
           {
+            name: 'order',
+            type: 'int',
+          },
+          {
             name: 'type',
             type: 'varchar',
             isNullable: true,
@@ -80,12 +84,14 @@ export default class CreateCheckoutsSalesCoupons1618431166793
             type: 'decimal',
             precision: 20,
             scale: 6,
+            isNullable: true,
           },
           {
             name: 'total_addition',
             type: 'decimal',
             precision: 20,
             scale: 6,
+            isNullable: true,
           },
           {
             name: 'created_at',
@@ -101,7 +107,7 @@ export default class CreateCheckoutsSalesCoupons1618431166793
         foreignKeys: [
           {
             name: 'CompanyCheckoutsSalesCoupons',
-            columnNames: ['comapany_id'],
+            columnNames: ['company_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'companies',
             onUpdate: 'CASCADE',

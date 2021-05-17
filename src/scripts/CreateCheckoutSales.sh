@@ -1,13 +1,13 @@
 #!/bin/bash
 export PATH=$PATH:$HOME/sgup/bin:/sbin:/bin
-BASE_URL='http://localhost:3333'
+BASE_URL='http://localhost:9090'
 
 DIR_FILES="$HOME/vendas_pdvs"
 DIR_DBF='/media/sandro/9864B34564B32542/cristal/ser'
 
 ANOS='2019 2020 2021'
 MESES='01 02 03 04 05 06 07 08 09 10 11 12'
-DIAS_MESES='2703'
+DIAS_MESES='1903 2003 2103 2203 2303 2403 2503'
 
 [[ ! -d $DIR_FILES ]] && mkdir -p $DIR_FILES &>/dev/null
 
@@ -85,7 +85,7 @@ function readFIPDV() {
             STATUS=$(echo "${CANCELADO}"| tr -d ' ')
             ORIGEM=$(echo "${ORIGEM}"| tr -d ' ')
             DEBI_CRED=$(echo "${DEBI_CRED}"| tr -d ' ')
-            ORDEM=$(echo "${ORDEM}"| tr -d ' ')
+            ORDEM=$(echo ${ORDEM}| tr -d ' ')
             EMPCONV=$(echo "${EMPCONV}"| tr -d ' ')
             NUMAUTORI=$(echo "${NUMAUTORI}"| tr -d ' ')
             BINCARTAO=$(echo "${BINCARTAO}"| tr -d ' ')
@@ -104,6 +104,10 @@ function readFIPDV() {
               TROCO=0
             fi
 
+            if [[ -z $ORDEM ]]; then
+              ORDEM=0
+            fi
+
             TOTAL=$(echo "$VALOR_TOTAL-$TROCO_TOTAL"| bc -l)
 
             if [[ -z "${STATUS}" ]]; then
@@ -119,7 +123,8 @@ function readFIPDV() {
               coupon=$CUPOM \
               type=$TIPODOC \
               origin="$ORIGEM" \
-              status=$CANCELADO \
+              order=$ORDEM \
+	            status=$CANCELADO \
               sale_date="${DATA}" \
               time_start=$HORARIO \
               customer_cpf=$CGCCPF \

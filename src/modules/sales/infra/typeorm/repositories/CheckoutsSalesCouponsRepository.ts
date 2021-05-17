@@ -40,6 +40,14 @@ class CheckoutsSalesCouponsRepository
     return checkout;
   }
 
+  public async save(data: CheckoutSaleCoupon): Promise<CheckoutSaleCoupon> {
+    const coupon = this.ormRepository.create(data);
+
+    await this.ormRepository.save(coupon);
+
+    return coupon;
+  }
+
   public async update(
     id: string,
     data: ICreateCheckoutSaleCouponDTO,

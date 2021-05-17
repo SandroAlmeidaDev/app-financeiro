@@ -24,6 +24,9 @@ class CheckoutSaleCoupons {
   coupon: number;
 
   @Column()
+  order: number;
+
+  @Column()
   status?: string;
 
   @Column()

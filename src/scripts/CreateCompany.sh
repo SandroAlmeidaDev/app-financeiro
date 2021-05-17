@@ -1,6 +1,6 @@
 #!/bin/bash
 export PATH=$PATH:$HOME/sgup/bin:/sbin:/bin
-export BASE_URL='http://localhost:3333'
+export BASE_URL='http://localhost:9090'
 
 export DIR_FILES="$HOME/vendas_pdvs"
 export DIR_DBF='/media/sandro/9864B34564B32542/cristal/ser'

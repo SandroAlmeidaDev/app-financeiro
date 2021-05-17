@@ -3,7 +3,10 @@ import CheckoutSaleCoupon from '../infra/typeorm/entities/CheckoutSaleCoupon';
 import ICreateCheckoutSaleCouponDTO from '../dtos/ICreateCheckoutSaleCouponDTO';
 
 export default interface ICheckoutSaleCouponsSalesCouponsRepository {
-  create(data: ICreateCheckoutSaleCouponDTO): Promise<CheckoutSaleCoupon>;
+  create(
+    data: ICreateCheckoutSaleCouponDTO,
+  ): Promise<CheckoutSaleCoupon | CheckoutSaleCoupon[]>;
+  save(data: CheckoutSaleCoupon): Promise<CheckoutSaleCoupon>;
   update(id: string, data: ICreateCheckoutSaleCouponDTO): Promise<UpdateResult>;
   findById(id: string): Promise<CheckoutSaleCoupon | undefined>;
   findByCompanyIdCheckoutCoupon(

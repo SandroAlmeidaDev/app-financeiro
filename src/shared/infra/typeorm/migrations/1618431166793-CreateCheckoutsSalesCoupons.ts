@@ -33,6 +33,7 @@ export default class CreateCheckoutsSalesCoupons1618431166793
           {
             name: 'order',
             type: 'int',
+            isNullable: true,
           },
           {
             name: 'type',

@@ -1,13 +1,13 @@
 #!/bin/bash
 export PATH=$PATH:$HOME/sgup/bin:/sbin:/bin
-BASE_URL='http://localhost:3333'
+BASE_URL='http://localhost:9090'
 
 DIR_FILES="$HOME/vendas_pdvs"
 DIR_DBF='/media/sandro/9864B34564B32542/cristal/ser'
 
 ANOS='2019 2020 2021'
 MESES='01 02 03 04 05 06 07 08 09 10 11 12'
-DIAS_MESES='2703'
+DIAS_MESES='2303 2403 2503'
 
 [[ ! -d $DIR_FILES ]] && mkdir -p $DIR_FILES &>/dev/null
 
@@ -74,7 +74,7 @@ function readFIPDV() {
       for DIA_MES in ${DIAS_MESES[@]}; do
         if [[ -e fi$DIA_MES$PDV.dbf ]]; then
 
-          DADOS_CUPOM=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /SELECT:OPERADOR','ORIGEM','CUPOM','DEBI_CRED','ORDEM','EMPCONV','NUMAUTORI','BINCARTAO','NSU','BANDEIRA','CNPJCRED','ESPECIE','CANCELADO','OBSERVACAO','DATA','HORARIO','CGCCPF','NOMECLI','VALOR','TIPODOC)
+          DADOS_CUPOM=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:origem='VENDAS' /SELECT:OPERADOR','ORIGEM','CUPOM','DEBI_CRED','ORDEM','EMPCONV','NUMAUTORI','BINCARTAO','NSU','BANDEIRA','CNPJCRED','ESPECIE','CANCELADO','OBSERVACAO','DATA','HORARIO','CGCCPF','NOMECLI','VALOR','TIPODOC)
             echo "$DADOS_CUPOM"| \
             while IFS='|' read -r OPERADOR ORIGEM CUPOM DEBI_CRED ORDEM EMPCONV NUMAUTORI BINCARTAO NSU BANDEIRA CNPJCRED ESPECIE CANCELADO OBSERVACAO DATA HORARIO CGCCPF NOMECLI VALOR TIPODOC; do
             CHECKOUT_ID_API=$(cat $DIR_FILES/$CNPJ_FILIAL/config/config-api-filial-$CNPJ_FILIAL.ini | grep "CHECKOUT-$PDV-ID-API" | cut -d "=" -f2)
@@ -98,7 +98,8 @@ function readFIPDV() {
             VALOR=$(echo $VALOR| tr -d ' ')
             TIPODOC=$(echo $TIPODOC| tr -d ' ')
             VALOR_TOTAL=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:cupom=$CUPOM /FILTER:origem='VENDAS' /FILTER:debi_cred='C' /SUM:valor | tr -d ' ' | sed 's/ /|/g;s/.$//g')
-            TROCO_TOTAL=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:cupom=$CUPOM /FILTER:origem='TROCO' /FILTER:debi_cred='D' /SUM:valor | tr -d ' ' | sed 's/ /|/g;s/.$//g')
+            TROCO_TOTAL=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:cupom=$CUPOM /FILTER:debi_cred='D' /SUM:valor | tr -d ' ' | sed 's/ /|/g;s/.$//g')
+            DESCONTO=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:cupom=$CUPOM FILTER:especie='DESCONTO' /FILTER:debi_cred='*' /SUM:valor | tr -d ' ' | sed 's/ /|/g;s/.$//g')
 
             if [[ -z "${TROCO}" ]]; then
               TROCO=0
@@ -108,6 +109,10 @@ function readFIPDV() {
 
             if [[ -z "${STATUS}" ]]; then
               STATUS='N'
+            fi
+
+            if [[ -z ${ORDEM} ]]; then
+              ORDEM=1
             fi
 
             if [[ ! -z $COMPANY_ID ]] && [[ ! -z $CUPOM ]] && [[ ! -z $NUM_PDV ]]; then
@@ -124,6 +129,7 @@ function readFIPDV() {
               time_start=$HORARIO \
               customer_cpf=$CGCCPF \
               customer_name="$NOMECLI" \
+              total_discount=$DESCONTO \
               total_coupon=$TOTAL > $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/request/$DATA/cupom-$CUPOM-$ORDEM.json
 
               createCheckoutSales $CNPJ_FILIAL $NUM_PDV $CUPOM $DATA $ORDEM $TIPODOC

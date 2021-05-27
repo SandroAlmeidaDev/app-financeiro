@@ -59,3 +59,4 @@ jobs:
             yarn
             ./node_modules/.bin/typeorm migration:run
             pm2 restart app-financeiro
+            chmod +x ~/app/app-financeiro/src/scripts/*.sh

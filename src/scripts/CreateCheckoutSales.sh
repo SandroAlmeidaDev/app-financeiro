@@ -19,7 +19,7 @@ export DIAS_MESES=$(date +%d%m)
 #Data da venda
 export DATA_VENDA=$(date +%Y-%m-%d)
 
-[[ ! -d $DIR_FILES ]] && mkdir -p $DIR_FILES &>/dev/null
+[[ ! -d $DIR_FILES ]] && mkdir -p $DIR_FILES
 
 function createCheckoutSales() {
   CNPJ_FILIAL=$1
@@ -28,8 +28,8 @@ function createCheckoutSales() {
   ORDEM=$4
   TIPODOC=$5
 
-  [[ ! -d $DIR_FILES/$CNPJ_FILIAL/config ]] && mkdir -p $DIR_FILES/$CNPJ_FILIAL/config &>/dev/null
-  [[ ! -d $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA ]] && mkdir -p $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA &>/dev/null
+  [[ ! -d $DIR_FILES/$CNPJ_FILIAL/config ]] && mkdir -p $DIR_FILES/$CNPJ_FILIAL/config
+  [[ ! -d $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA ]] && mkdir -p $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA
 
 
   JSON_FILE="$DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/request/$DATA_VENDA/cupom-$CUPOM-$ORDEM.json"

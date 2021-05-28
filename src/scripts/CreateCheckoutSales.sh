@@ -140,7 +140,6 @@ function readFIPDV() {
 
             if [[ ! -z $COMPANY_ID ]] && [[ ! -z $CUPOM ]] && [[ ! -z $NUM_PDV ]]; then
               mkdir -p $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/request/$DATA
-
               jo -p company_id=$COMPANY_ID \
               checkout_id=$CHECKOUT_ID_API \
               operator=$OPERADOR \

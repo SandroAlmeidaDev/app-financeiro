@@ -44,6 +44,7 @@ function createCheckoutSales() {
   if [ ! "${COUPON_ID_API}" == "null" ]; then
     echo -ne "$COUPON" > $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA/$COUPON_ID_API.json
     echo -ne "$COUPON" > $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA/ultimo_cupom.json
+    echo -ne "coupon_id: $COUPON_ID_API cupom: $CUPOM e pdv: $NUM_PDV" >> $DIR_FILES/$CGCFIL99/importacao-`date +%Y-%m-%d`.log
   fi
 }
 

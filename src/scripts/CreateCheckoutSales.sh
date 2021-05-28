@@ -1,7 +1,7 @@
 #!/bin/bash
-if [[ ! $# -eq 3 ]]; then
+if [[ ! $# -eq 2 ]]; then
   clear
-  echo "Parametros invalidos. Use numero filial, caminho do sistema e mes de vendas"
+  echo "Parametros invalidos. Use numero filial e caminho do sistema"
   sleep 3
   exit
 fi
@@ -13,9 +13,11 @@ BASE_URL='http://localhost:9090'
 DIR_FILES="$HOME/vendas_pdvs"
 DIR_DBF=$2
 
-#Mes de vendas
-DIAS_MESES=$3
+#Mes e dia da venda
+export DIAS_MESES=$(date +%d%m)
 
+#Data da venda
+export DATA_VENDA=$(date +%Y-%m-%d)
 
 [[ ! -d $DIR_FILES ]] && mkdir -p $DIR_FILES &>/dev/null
 
@@ -23,9 +25,8 @@ function createCheckoutSales() {
   CNPJ_FILIAL=$1
   NUMERO_PDV=$2
   CUPOM=$3
-  DATA_VENDA=$4
-  ORDEM=$5
-  TIPODOC=$6
+  ORDEM=$4
+  TIPODOC=$5
 
   [[ ! -d $DIR_FILES/$CNPJ_FILIAL/config ]] && mkdir -p $DIR_FILES/$CNPJ_FILIAL/config &>/dev/null
   [[ ! -d $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA ]] && mkdir -p $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA &>/dev/null
@@ -42,11 +43,7 @@ function createCheckoutSales() {
 
   if [ ! "${COUPON_ID_API}" == "null" ]; then
     echo -ne "$COUPON" > $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA/$COUPON_ID_API.json
-
-    # if [[ ! "${TIPODOC}" == "CN" ]] && [[ ! -z $TIPODOC ]]; then
-    #   #createCheckoutSalesTransactions $COUPON_ID_API $CUPOM
-    #   #createCouponsProducts $COUPON_ID_API $CUPOM
-    # fi
+    echo -ne "$COUPON" > $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA/ultimo_cupom.json
   fi
 }
 
@@ -81,8 +78,21 @@ function readFIPDV() {
 
       for DIA_MES in ${DIAS_MESES[@]}; do
         if [[ -e fi$DIA_MES$PDV.dbf ]]; then
+          ULTIMO_CUPOM=$(cat $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA/ultimo_cupom.json)
+          ULTIMO_CUPOM=$(echo $ULTIMO_CUPOM| tr -d ' ')
 
-          DADOS_CUPOM=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:origem='VENDAS' /SELECT:OPERADOR','ORIGEM','CUPOM','DEBI_CRED','ORDEM','EMPCONV','NUMAUTORI','BINCARTAO','NSU','BANDEIRA','CNPJCRED','ESPECIE','CANCELADO','OBSERVACAO','DATA','HORARIO','CGCCPF','NOMECLI','VALOR','TIPODOC)
+          if [[ -z ${ULTIMO_CUPOM} ]]; then
+            ULTIMO_CUPOM=0
+          fi
+
+          #Envia os ultimos 5 cupons de venda
+          if [[ $ULTIMO_CUPOM -ge 5 ]]; then
+            ULTIMO_CUPOM=$(echo "$ULTIMO_CUPOM-5"| bc -l)
+          else
+            ULTIMO_CUPOM=0
+          fi
+
+          DADOS_CUPOM=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:cupom'>='$ULTIMO_CUPOM /FILTER:origem='VENDAS' /SELECT:OPERADOR','ORIGEM','CUPOM','DEBI_CRED','ORDEM','EMPCONV','NUMAUTORI','BINCARTAO','NSU','BANDEIRA','CNPJCRED','ESPECIE','CANCELADO','OBSERVACAO','DATA','HORARIO','CGCCPF','NOMECLI','VALOR','TIPODOC)
             echo "$DADOS_CUPOM"| \
             while IFS='|' read -r OPERADOR ORIGEM CUPOM DEBI_CRED ORDEM EMPCONV NUMAUTORI BINCARTAO NSU BANDEIRA CNPJCRED ESPECIE CANCELADO OBSERVACAO DATA HORARIO CGCCPF NOMECLI VALOR TIPODOC; do
             CHECKOUT_ID_API=$(cat $DIR_FILES/$CNPJ_FILIAL/config/config-api-filial-$CNPJ_FILIAL.ini | grep "CHECKOUT-$PDV-ID-API" | cut -d "=" -f2)
@@ -108,6 +118,10 @@ function readFIPDV() {
             VALOR_TOTAL=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:cupom=$CUPOM /FILTER:origem='VENDAS' /FILTER:debi_cred='C' /SUM:valor | tr -d ' ' | sed 's/ /|/g;s/.$//g')
             TROCO_TOTAL=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:cupom=$CUPOM /FILTER:debi_cred='D' /SUM:valor | tr -d ' ' | sed 's/ /|/g;s/.$//g')
             DESCONTO=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:cupom=$CUPOM FILTER:especie='DESCONTO' /FILTER:debi_cred='*' /SUM:valor | tr -d ' ' | sed 's/ /|/g;s/.$//g')
+
+            if [[ ! ${DATA} == ${DATA_VENDA} ]]; then
+              continue
+            fi
 
             if [[ -z "${TROCO}" ]]; then
               TROCO=0
@@ -140,7 +154,7 @@ function readFIPDV() {
               total_discount=$DESCONTO \
               total_coupon=$TOTAL > $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/request/$DATA/cupom-$CUPOM-$ORDEM.json
 
-              createCheckoutSales $CNPJ_FILIAL $NUM_PDV $CUPOM $DATA $ORDEM $TIPODOC
+              createCheckoutSales $CNPJ_FILIAL $NUM_PDV $CUPOM $ORDEM $TIPODOC
 
               function createCheckoutSalesTransactions() {
                 COUPON_ID_API=$1

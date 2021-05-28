@@ -67,10 +67,6 @@ function readFIPDV() {
     for PDV in ${PDVS}; do
       cd $DIR_DBF
 
-      if ! [[ ! -z $PDV ]] ; then
-        continue
-      fi
-
       DADOS_PDV=$(cdbflites tabpdv.dbf /TRIM:all /DELETED- /FILTER:numero=$PDV /FILTER:filial=$COD_FILIAL \
       /SELECT:numero','datainativ
       )
@@ -83,7 +79,7 @@ function readFIPDV() {
 
       for DIA_MES in ${DIAS_MESES[@]}; do
         if [[ -e fi$DIA_MES$PDV.dbf ]]; then
-          ULTIMO_CUPOM=$(cat $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA/ultimo_cupom.json | jq '.coupon')
+          ULTIMO_CUPOM=$(cat $DIR_FILES/$CNPJ_FILIAL/pdv-$PDV/response/$DATA_VENDA/ultimo_cupom.json | jq '.coupon')
           ULTIMO_CUPOM=$(echo $ULTIMO_CUPOM| tr -d ' ')
 
           if [[ -z ${ULTIMO_CUPOM} ]]; then

@@ -67,6 +67,11 @@ function readFIPDV() {
     for PDV in ${PDVS}; do
       cd $DIR_DBF
 
+      re='^[0-9]+$'
+      if ! [[ $PDV =~ $re ]] ; then
+        continue
+      fi
+
       DADOS_PDV=$(cdbflites tabpdv.dbf /TRIM:all /DELETED- /FILTER:numero=$PDV /FILTER:filial=$COD_FILIAL \
       /SELECT:numero','datainativ
       )

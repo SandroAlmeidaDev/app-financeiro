@@ -67,7 +67,7 @@ function readFIPDV() {
     for PDV in ${PDVS}; do
       cd $DIR_DBF
 
-      if ! [[ -z $PDV ]] ; then
+      if ! [[ ! -z $PDV ]] ; then
         continue
       fi
 

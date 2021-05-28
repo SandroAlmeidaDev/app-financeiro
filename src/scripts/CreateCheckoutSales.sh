@@ -78,7 +78,7 @@ function readFIPDV() {
 
       for DIA_MES in ${DIAS_MESES[@]}; do
         if [[ -e fi$DIA_MES$PDV.dbf ]]; then
-          ULTIMO_CUPOM=$(cat $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA/ultimo_cupom.json)
+          ULTIMO_CUPOM=$(cat $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA/ultimo_cupom.json | jq '.coupon')
           ULTIMO_CUPOM=$(echo $ULTIMO_CUPOM| tr -d ' ')
 
           if [[ -z ${ULTIMO_CUPOM} ]]; then

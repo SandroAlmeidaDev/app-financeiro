@@ -43,10 +43,10 @@ function createCheckoutSales() {
   if [ ! "${COUPON_ID_API}" == "null" ]; then
     echo -ne "$COUPON" > $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA/$COUPON_ID_API.json
 
-    if [[ ! "${TIPODOC}" == "CN" ]] && [[ ! -z $TIPODOC ]]; then
-      #createCheckoutSalesTransactions $COUPON_ID_API $CUPOM
-      #createCouponsProducts $COUPON_ID_API $CUPOM
-    fi
+    # if [[ ! "${TIPODOC}" == "CN" ]] && [[ ! -z $TIPODOC ]]; then
+    #   #createCheckoutSalesTransactions $COUPON_ID_API $CUPOM
+    #   #createCouponsProducts $COUPON_ID_API $CUPOM
+    # fi
   fi
 }
 

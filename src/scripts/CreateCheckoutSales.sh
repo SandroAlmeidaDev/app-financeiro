@@ -1,4 +1,7 @@
 #!/bin/bash
+export PATH=$PATH:$HOME/sgup/bin:/sbin:/bin
+BASE_URL='http://localhost:9090'
+
 if [[ ! $# -eq 2 ]]; then
   clear
   echo "Parametros invalidos. Use numero filial e caminho do sistema"
@@ -6,18 +9,22 @@ if [[ ! $# -eq 2 ]]; then
   exit
 fi
 
-export PATH=$PATH:$HOME/sgup/bin:/sbin:/bin
-BASE_URL='http://localhost:9090'
-
-#Arquivos
-DIR_FILES="$HOME/vendas_pdvs"
-DIR_DBF=$2
-
 #Mes e dia da venda
 export DIAS_MESES=$(date +%d%m)
 
 #Data da venda
 export DATA_VENDA=$(date +%Y-%m-%d)
+
+
+if [[ "${$1}" == "/p" ]]; then
+  export COD_FILIAIS=$(read -p "Filiais: " COD_FILIAIS)
+  export DIAS_MESES=$(read -p "Dia mes: " DIAS_MESES)
+  export DIR_DBF=$(read -p "Sistema: " DIR_DBF)
+fi
+
+#Arquivos
+DIR_FILES="$HOME/vendas_pdvs"
+DIR_DBF=$2
 
 [[ ! -d $DIR_FILES ]] && mkdir -p $DIR_FILES
 
@@ -75,6 +82,10 @@ function readFIPDV() {
         cd $DIR_DBF/comuni0$COD_FILIAL
       else
         cd $DIR_DBF/comuni$COD_FILIAL
+      fi
+
+      if [[ $PDV -lt 10 ]]; then
+        PDV=0$PDV
       fi
 
       for DIA_MES in ${DIAS_MESES[@]}; do

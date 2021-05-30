@@ -2,29 +2,27 @@
 export PATH=$PATH:$HOME/sgup/bin:/sbin:/bin
 BASE_URL='http://localhost:9090'
 
-if [[ ! $# -eq 2 ]]; then
+if [[ $1 == "/p" ]]; then
+  read -p "Filiais: " COD_FILIAIS
+  read -p "Ano....: " ANO
+  read -p "Dia mes: " DIAS_MESES
+  read -p "Sistema: " DIR_DBF
+elif [[ ! $# -eq 2 ]]; then
   clear
   echo "Parametros invalidos. Use numero filial e caminho do sistema"
   sleep 3
   exit
-fi
-
-#Mes e dia da venda
-export DIAS_MESES=$(date +%d%m)
-
-#Data da venda
-export DATA_VENDA=$(date +%Y-%m-%d)
-
-
-if [[ "${$1}" == "/p" ]]; then
-  export COD_FILIAIS=$(read -p "Filiais: " COD_FILIAIS)
-  export DIAS_MESES=$(read -p "Dia mes: " DIAS_MESES)
-  export DIR_DBF=$(read -p "Sistema: " DIR_DBF)
+else
+  export ANO=$(date +%Y)
+  export DIAS_MESES=$(date +%d%m)
+  export DATA_VENDA=$(date +%Y-%m-%d)
+  COD_FILIAIS=$1
+  DIR_DBF=$2
 fi
 
 #Arquivos
 DIR_FILES="$HOME/vendas_pdvs"
-DIR_DBF=$2
+
 
 [[ ! -d $DIR_FILES ]] && mkdir -p $DIR_FILES
 
@@ -59,9 +57,6 @@ function createCheckoutSales() {
 function readFIPDV() {
   cd $DIR_DBF
 
-  COD_FILIAIS=$1
-
-
   #COD_FILIAIS=$(cdbflites cadfil.dbf /TRIM:all /DELETED- /ORDER:codfil99 /SELECT:codfil99' | sed 's/^ *//g')
 
   for COD_FILIAL in ${COD_FILIAIS[@]}; do
@@ -89,6 +84,8 @@ function readFIPDV() {
       fi
 
       for DIA_MES in ${DIAS_MESES[@]}; do
+        DATA_VENDA=$(echo ${ANO}-${DIA_MES:2:2}-${DIA_MES:0:2})
+
         if [[ -e fi$DIA_MES$PDV.dbf ]]; then
           ULTIMO_CUPOM=$(cat $DIR_FILES/$CNPJ_FILIAL/pdv-$PDV/response/$DATA_VENDA/ultimo_cupom.json | jq '.coupon')
           ULTIMO_CUPOM=$(echo $ULTIMO_CUPOM| tr -d ' ')
@@ -128,7 +125,7 @@ function readFIPDV() {
             VALOR=$(echo $VALOR| tr -d ' ')
             TIPODOC=$(echo $TIPODOC| tr -d ' ')
             VALOR_TOTAL=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:cupom=$CUPOM /FILTER:origem='VENDAS' /FILTER:debi_cred='C' /SUM:valor | tr -d ' ' | sed 's/ /|/g;s/.$//g')
-            TROCO_TOTAL=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:cupom=$CUPOM /FILTER:debi_cred='D' /SUM:valor | tr -d ' ' | sed 's/ /|/g;s/.$//g')
+            TROCO_TOTAL=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:cupom=$CUPOM /FILTER:origem='TROCO' /SUM:valor | tr -d ' ' | sed 's/ /|/g;s/.$//g')
             DESCONTO=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:cupom=$CUPOM FILTER:especie='DESCONTO' /FILTER:debi_cred='*' /SUM:valor | tr -d ' ' | sed 's/ /|/g;s/.$//g')
 
             if [[ ! ${DATA} == ${DATA_VENDA} ]]; then

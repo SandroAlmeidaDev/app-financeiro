@@ -2,11 +2,12 @@
 export PATH=$PATH:$HOME/sgup/bin:/sbin:/bin
 BASE_URL='http://localhost:9090'
 
-if [[ $1 == "/p" ]]; then
+if [[ $1 == "/r" ]]; then
   read -p "Filiais: " COD_FILIAIS
   read -p "Ano....: " ANO
   read -p "Dia mes: " DIAS_MESES
   read -p "Sistema: " DIR_DBF
+  REPROCESSAR=true
 elif [[ ! $# -eq 2 ]]; then
   clear
   echo "Parametros invalidos. Use numero filial e caminho do sistema"
@@ -98,6 +99,10 @@ function readFIPDV() {
           if [[ $ULTIMO_CUPOM -ge 5 ]]; then
             ULTIMO_CUPOM=$(echo "$ULTIMO_CUPOM-5"| bc -l)
           else
+            ULTIMO_CUPOM=0
+          fi
+
+          if [[ ${REPROCESSAR} == true ]]; then
             ULTIMO_CUPOM=0
           fi
 

@@ -1,6 +1,5 @@
 import { inject, injectable } from 'tsyringe';
 
-import { UpdateResult } from 'typeorm';
 import Checkout from '../infra/typeorm/entities/Checkout';
 import ICheckoutsRepository from '../repositories/ICheckoutsRepository';
 
@@ -17,24 +16,31 @@ class CreateOrUpdateCheckoutService {
     private checkoutsRepository: ICheckoutsRepository,
   ) {}
 
-  public async execute(data: IRequest): Promise<Checkout | UpdateResult> {
-    const checkCheckoutExists = await this.checkoutsRepository.findByCompanyIdNumber(
-      data.company_id,
-      data.number,
+  public async execute({
+    company_id,
+    number,
+    status,
+  }: IRequest): Promise<Checkout> {
+    const checkout = await this.checkoutsRepository.findByCompanyIdNumber(
+      company_id,
+      number,
     );
 
-    if (checkCheckoutExists) {
-      const checkoutUpdated = await this.checkoutsRepository.update(
-        checkCheckoutExists.id,
-        data,
-      );
+    if (!checkout) {
+      const createCheckout = await this.checkoutsRepository.create({
+        company_id,
+        number,
+        status,
+      });
 
-      return checkoutUpdated;
+      return createCheckout;
     }
 
-    const newCheckout = await this.checkoutsRepository.create(data);
+    checkout.company_id = company_id;
+    checkout.number = number;
+    checkout.status = status;
 
-    return newCheckout;
+    return this.checkoutsRepository.save(checkout);
   }
 }
 

@@ -7,7 +7,38 @@ import { container } from 'tsyringe';
 
 export default class CouponProductsController {
   public async create(request: Request, response: Response): Promise<Response> {
-    const { sale_date, ...data } = request.body;
+    const {
+      company_id,
+      checkout_id,
+      coupon_id,
+      operator,
+      coupon,
+      erp_product_id,
+      bar_code,
+      quantity,
+      unit_price,
+      discount,
+      total_price,
+      hour,
+      sale_date,
+      erp_offer_id,
+      is_canceled,
+      order,
+      erp_customer_id,
+      erp_seller_id,
+      erp_department_id,
+      aliquot_icms,
+      normal_price,
+      type_price,
+      type_taxation,
+      model_doc,
+      motive_discount,
+      serie_nf,
+      erp_promo_id,
+      erp_order_id,
+      bc_pis,
+      bc_cofins,
+    } = request.body;
 
     const createCouponProduct = container.resolve(
       CreateOrUpdateCouponProductService,
@@ -16,8 +47,36 @@ export default class CouponProductsController {
     const parseDateSale = parseISO(sale_date);
 
     const couponProduct = await createCouponProduct.execute({
+      company_id,
+      checkout_id,
+      coupon_id,
+      operator,
+      coupon,
+      erp_product_id,
+      bar_code,
+      quantity,
+      unit_price,
+      discount,
+      total_price,
+      hour,
       sale_date: parseDateSale,
-      ...data,
+      erp_offer_id,
+      is_canceled,
+      order,
+      erp_customer_id,
+      erp_seller_id,
+      erp_department_id,
+      aliquot_icms,
+      normal_price,
+      type_price,
+      type_taxation,
+      model_doc,
+      motive_discount,
+      serie_nf,
+      erp_promo_id,
+      erp_order_id,
+      bc_pis,
+      bc_cofins,
     });
 
     return response.json(couponProduct);

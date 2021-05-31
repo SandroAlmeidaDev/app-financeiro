@@ -7,7 +7,22 @@ import { container } from 'tsyringe';
 
 export default class CheckoutsSalesCouponsController {
   public async create(request: Request, response: Response): Promise<Response> {
-    const { sale_date, ...data } = request.body;
+    const {
+      company_id,
+      checkout_id,
+      operator,
+      coupon,
+      type,
+      origin,
+      status,
+      sale_date,
+      time_start,
+      customer_id,
+      customer_name,
+      total_coupon,
+      total_discount,
+      total_addition,
+    } = request.body;
 
     const parseDateSale = parseISO(sale_date);
 
@@ -16,8 +31,20 @@ export default class CheckoutsSalesCouponsController {
     );
 
     const saleCoupon = await createCheckoutSaleCoupon.execute({
+      company_id,
+      checkout_id,
+      operator,
+      coupon,
+      type,
+      origin,
+      status,
       sale_date: parseDateSale,
-      ...data,
+      time_start,
+      customer_id,
+      customer_name,
+      total_coupon,
+      total_discount,
+      total_addition,
     });
 
     return response.json(saleCoupon);

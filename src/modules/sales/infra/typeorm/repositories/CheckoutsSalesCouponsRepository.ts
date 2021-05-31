@@ -1,8 +1,13 @@
-import { getRepository, Repository, UpdateResult } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 
 import ICheckoutsSalesCouponsRepository from '@modules/sales/repositories/ICheckoutsSalesCouponsRepository';
 import ICreateCheckoutSaleCouponDTO from '@modules/sales/dtos/ICreateCheckoutSaleCouponDTO';
 import CheckoutSaleCoupon from '../entities/CheckoutSaleCoupon';
+
+interface ImportCSVResponse {
+  message: string;
+  rows_inserted: number;
+}
 
 class CheckoutsSalesCouponsRepository
   implements ICheckoutsSalesCouponsRepository {
@@ -33,20 +38,31 @@ class CheckoutsSalesCouponsRepository
   public async create(
     data: ICreateCheckoutSaleCouponDTO,
   ): Promise<CheckoutSaleCoupon> {
-    const checkout = this.ormRepository.create(data);
+    const checkoutSaleCoupon = this.ormRepository.create(data);
 
-    await this.ormRepository.save(checkout);
+    await this.ormRepository.save(checkoutSaleCoupon);
 
-    return checkout;
+    return checkoutSaleCoupon;
   }
 
-  public async update(
-    id: string,
-    data: ICreateCheckoutSaleCouponDTO,
-  ): Promise<UpdateResult> {
-    const checkout = await this.ormRepository.update(id, data);
+  public async save(
+    checkoutSaleCoupon: CheckoutSaleCoupon,
+  ): Promise<CheckoutSaleCoupon> {
+    return this.ormRepository.save(checkoutSaleCoupon);
+  }
 
-    return checkout;
+  public async importCSV(
+    file_path: string,
+    company_id: string,
+    checkout_id: string,
+  ): Promise<ImportCSVResponse | CheckoutSaleCoupon> {
+    const checkoutSaleCoupon = this.ormRepository.create({
+      file_path,
+      company_id,
+      checkout_id,
+    });
+
+    return checkoutSaleCoupon;
   }
 
   public async findById(id: string): Promise<CheckoutSaleCoupon | undefined> {

@@ -1,5 +1,4 @@
 import { inject, injectable } from 'tsyringe';
-import { UpdateResult } from 'typeorm';
 
 import CheckoutTransaction from '../infra/typeorm/entities/CheckoutTransaction';
 import ICheckoutsTransactionsRepository from '../repositories/ICheckoutsTransactionsRepository';
@@ -34,34 +33,90 @@ class CreateOrUpdateCheckoutTransactionService {
     private checkoutsTransactionsRepository: ICheckoutsTransactionsRepository,
   ) {}
 
-  public async execute(
-    data: IRequest,
-  ): Promise<CheckoutTransaction | UpdateResult> {
-    const checkTransactionExists = await this.checkoutsTransactionsRepository.findTransaction(
-      data.company_id,
-      data.checkout_id,
-      data.coupon_id,
-      data.type,
-      data.origin,
-      data.pay_type,
-      data.total,
-      data.sale_date,
+  public async execute({
+    company_id,
+    checkout_id,
+    coupon_id,
+    operator,
+    coupon,
+    type,
+    sale_date,
+    cancellation_status,
+    origin,
+    pay_type,
+    total,
+    order,
+    parcel,
+    covenant_company,
+    authorization_number,
+    bin_cart,
+    nsu,
+    card_banner,
+    card_cnpj,
+    note,
+  }: IRequest): Promise<CheckoutTransaction> {
+    const checkoutTransaction = await this.checkoutsTransactionsRepository.findTransaction(
+      company_id,
+      checkout_id,
+      coupon_id,
+      type,
+      origin,
+      pay_type,
+      total,
+      sale_date,
     );
 
-    if (checkTransactionExists) {
-      const transactionUpdated = await this.checkoutsTransactionsRepository.update(
-        checkTransactionExists.id,
-        data,
+    if (!checkoutTransaction) {
+      const createCheckoutTransaction = await this.checkoutsTransactionsRepository.create(
+        {
+          company_id,
+          checkout_id,
+          coupon_id,
+          operator,
+          coupon,
+          type,
+          sale_date,
+          cancellation_status,
+          origin,
+          pay_type,
+          total,
+          order,
+          parcel,
+          covenant_company,
+          authorization_number,
+          bin_cart,
+          nsu,
+          card_banner,
+          card_cnpj,
+          note,
+        },
       );
 
-      return transactionUpdated;
+      return createCheckoutTransaction;
     }
 
-    const newTransaction = await this.checkoutsTransactionsRepository.create(
-      data,
-    );
+    checkoutTransaction.company_id = company_id;
+    checkoutTransaction.checkout_id = checkout_id;
+    checkoutTransaction.coupon_id = coupon_id;
+    checkoutTransaction.operator = operator;
+    checkoutTransaction.coupon = coupon;
+    checkoutTransaction.type = type;
+    checkoutTransaction.sale_date = sale_date;
+    checkoutTransaction.cancellation_status = cancellation_status;
+    checkoutTransaction.origin = origin;
+    checkoutTransaction.pay_type = pay_type;
+    checkoutTransaction.total = total;
+    checkoutTransaction.order = order;
+    checkoutTransaction.parcel = parcel;
+    checkoutTransaction.covenant_company = covenant_company;
+    checkoutTransaction.authorization_number = authorization_number;
+    checkoutTransaction.bin_cart = bin_cart;
+    checkoutTransaction.nsu = nsu;
+    checkoutTransaction.card_banner = card_banner;
+    checkoutTransaction.card_cnpj = card_cnpj;
+    checkoutTransaction.note = note;
 
-    return newTransaction;
+    return this.checkoutsTransactionsRepository.save(checkoutTransaction);
   }
 }
 

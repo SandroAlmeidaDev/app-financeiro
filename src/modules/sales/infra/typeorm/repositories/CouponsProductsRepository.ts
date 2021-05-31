@@ -1,4 +1,4 @@
-import { getRepository, Repository, UpdateResult } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 
 import ICreateCouponProductDTO from '@modules/sales/dtos/ICreateCouponProductDTO';
 import ICouponProductsRepository from '@modules/sales/repositories/ICouponProductsRepository';
@@ -45,13 +45,8 @@ class CouponsProductsRepository implements ICouponProductsRepository {
     return couponProducts;
   }
 
-  public async update(
-    id: string,
-    data: ICreateCouponProductDTO,
-  ): Promise<UpdateResult> {
-    const couponProducts = await this.ormRepository.update(id, data);
-
-    return couponProducts;
+  public async save(couponProduct: CouponProduct): Promise<CouponProduct> {
+    return this.ormRepository.save(couponProduct);
   }
 
   public async findById(id: string): Promise<CouponProduct | undefined> {

@@ -1,5 +1,4 @@
 import { inject, injectable } from 'tsyringe';
-import { UpdateResult } from 'typeorm';
 
 import CheckoutSaleCoupon from '../infra/typeorm/entities/CheckoutSaleCoupon';
 import ICheckoutsSalesCouponsRepository from '../repositories/ICheckoutsSalesCouponsRepository';
@@ -28,30 +27,68 @@ class CreateOrUpdateCheckoutSaleCouponService {
     private checkoutsSalesCouponsRepository: ICheckoutsSalesCouponsRepository,
   ) {}
 
-  public async execute(
-    data: IRequest,
-  ): Promise<CheckoutSaleCoupon | UpdateResult> {
-    const checkCouponExists = await this.checkoutsSalesCouponsRepository.findByCompanyIdCheckoutCoupon(
-      data.company_id,
-      data.checkout_id,
-      data.coupon,
-      data.sale_date,
+  public async execute({
+    company_id,
+    checkout_id,
+    operator,
+    coupon,
+    type,
+    origin,
+    status,
+    sale_date,
+    time_start,
+    customer_id,
+    customer_name,
+    total_coupon,
+    total_discount,
+    total_addition,
+  }: IRequest): Promise<CheckoutSaleCoupon> {
+    const checkoutSaleCoupon = await this.checkoutsSalesCouponsRepository.findByCompanyIdCheckoutCoupon(
+      company_id,
+      checkout_id,
+      coupon,
+      sale_date,
     );
 
-    if (checkCouponExists) {
-      const saleCouponUpdated = await this.checkoutsSalesCouponsRepository.update(
-        checkCouponExists.id,
-        data,
+    if (!checkoutSaleCoupon) {
+      const CreateCheckoutSaleCoupon = await this.checkoutsSalesCouponsRepository.create(
+        {
+          company_id,
+          checkout_id,
+          operator,
+          coupon,
+          type,
+          origin,
+          status,
+          sale_date,
+          time_start,
+          customer_id,
+          customer_name,
+          total_coupon,
+          total_discount,
+          total_addition,
+        },
       );
 
-      return saleCouponUpdated;
+      return CreateCheckoutSaleCoupon;
     }
 
-    const checkoutSaleCoupon = await this.checkoutsSalesCouponsRepository.create(
-      data,
-    );
+    checkoutSaleCoupon.company_id = company_id;
+    checkoutSaleCoupon.checkout_id = checkout_id;
+    checkoutSaleCoupon.operator = operator;
+    checkoutSaleCoupon.coupon = coupon;
+    checkoutSaleCoupon.type = type;
+    checkoutSaleCoupon.origin = origin;
+    checkoutSaleCoupon.status = status;
+    checkoutSaleCoupon.sale_date = sale_date;
+    checkoutSaleCoupon.time_start = time_start;
+    checkoutSaleCoupon.customer_id = customer_id;
+    checkoutSaleCoupon.customer_name = customer_name;
+    checkoutSaleCoupon.total_coupon = total_coupon;
+    checkoutSaleCoupon.total_discount = total_discount;
+    checkoutSaleCoupon.total_addition = total_addition;
 
-    return checkoutSaleCoupon;
+    return this.checkoutsSalesCouponsRepository.save(checkoutSaleCoupon);
   }
 }
 

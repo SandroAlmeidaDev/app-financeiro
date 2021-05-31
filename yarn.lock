@@ -2989,6 +2989,11 @@ cssstyle@^2.3.0:
   dependencies:
     cssom "~0.3.6"
 
+csv-parse@^4.15.4:
+  version "4.15.4"
+  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-4.15.4.tgz#ad1ec62aaf71a642982dfcb81f1848184d691db5"
+  integrity sha512-OdBbFc0yZhOm17lSxqkirrHlFFVpKRT0wp4DAGoJelsP3LbGzV9LNr7XmM/lrr0uGkCtaqac9UhP8PDHXOAbMg==
+
 currently-unhandled@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/currently-unhandled/-/currently-unhandled-0.4.1.tgz#988df33feab191ef799a61369dd76c17adf957ea"
@@ -6266,6 +6271,11 @@ packet-reader@1.0.0:
   resolved "https://registry.yarnpkg.com/packet-reader/-/packet-reader-1.0.0.tgz#9238e5480dedabacfe1fe3f2771063f164157d74"
   integrity sha512-HAKu/fG3HpHFO0AA8WE8q2g+gBJaZ9MG7fcKk+IJPLTGAD6Psw4443l+9DGRbOIh3/aXr7Phy0TjilYivJo5XQ==
 
+papaparse@^5.3.0:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-5.3.1.tgz#770b7a9124d821d4b2132132b7bd7dce7194b5b1"
+  integrity sha512-Dbt2yjLJrCwH2sRqKFFJaN5XgIASO9YOFeFP8rIBRG2Ain8mqk5r1M6DkfvqEVozVcz3r3HaUGw253hA1nLIcA==
+
 parent-module@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/parent-module/-/parent-module-1.0.1.tgz#691d2709e78c79fae3a156622452d00762caaaa2"
@@ -7037,6 +7047,11 @@ require-relative@^0.8.7:
   resolved "https://registry.yarnpkg.com/require-relative/-/require-relative-0.8.7.tgz#7999539fc9e047a37928fa196f8e1563dabd36de"
   integrity sha1-eZlTn8ngR6N5KPoZb44VY9q9Nt4=
 
+rereadable-stream@^1.4.9:
+  version "1.4.11"
+  resolved "https://registry.yarnpkg.com/rereadable-stream/-/rereadable-stream-1.4.11.tgz#2f774e383e40009335643f31ea9d641ad0988afc"
+  integrity sha512-XfIyE/LUaTTJhIlSnD4R+ZRKn3iHu01+qL4h7jtJAobekIKgM6zpdyWmyqvxY/Ht1lYfHfEnZGmROCe8LeHGKQ==
+
 reselect@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/reselect/-/reselect-4.0.0.tgz#f2529830e5d3d0e021408b246a206ef4ea4437f7"
@@ -7202,6 +7217,20 @@ saxes@^5.0.1:
   integrity sha512-5LBh1Tls8c9xgGjw3QrMwETmTMVk0oFgvrFSvWx62llR2hcEInrKNZ2GZCCuuy2lvWrdl5jhbpeqc5hRYKFOcw==
   dependencies:
     xmlchars "^2.2.0"
+
+scramjet-core@^4.31.17:
+  version "4.31.17"
+  resolved "https://registry.yarnpkg.com/scramjet-core/-/scramjet-core-4.31.17.tgz#afbffd704ad5d095ed5a2207fd35df67dc1281c1"
+  integrity sha512-BIfxYDaV40TnQGq7Y1WTqAvh/OzLPNyfH2pYx3TBKASkVTrtLOH/6Ub5vFOIhCnwMWpYSPvDH8KrqpRmvrPGXw==
+
+scramjet@^4.35.17:
+  version "4.35.17"
+  resolved "https://registry.yarnpkg.com/scramjet/-/scramjet-4.35.17.tgz#71a55328c2301ae2da94e248572b69e75b62f783"
+  integrity sha512-Cyhj9K/F9gPHm5hgUqJfRqdTT0m5uKgPEDEywEqQMdldZQaUFhsuzVq95nsprZ8TDmEMu9Cgd9lCl8H5OYbPqw==
+  dependencies:
+    papaparse "^5.3.0"
+    rereadable-stream "^1.4.9"
+    scramjet-core "^4.31.17"
 
 "semver@2 || 3 || 4 || 5", semver@^5.4.1, semver@^5.5.0, semver@^5.5.1, semver@^5.6.0, semver@^5.7.0:
   version "5.7.1"

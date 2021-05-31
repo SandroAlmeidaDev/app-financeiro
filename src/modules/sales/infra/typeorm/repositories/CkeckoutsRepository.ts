@@ -1,4 +1,4 @@
-import { getRepository, Repository, UpdateResult } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 
 import ICheckoutsRepository from '@modules/sales/repositories/ICheckoutsRepository';
 import ICreateCheckoutDTO from '@modules/sales/dtos/ICreateCheckoutDTO';
@@ -33,13 +33,8 @@ class CheckoutsRepository implements ICheckoutsRepository {
     return checkout;
   }
 
-  public async update(
-    id: string,
-    data: ICreateCheckoutDTO,
-  ): Promise<UpdateResult> {
-    const checkout = await this.ormRepository.update(id, data);
-
-    return checkout;
+  public async save(checkout: Checkout): Promise<Checkout> {
+    return this.ormRepository.save(checkout);
   }
 
   public async findById(id: string): Promise<Checkout | undefined> {

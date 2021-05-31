@@ -1,4 +1,5 @@
 export default interface ICreateCheckoutSaleCouponDTO {
+  file_path?: string;
   company_id: string;
   checkout_id: string;
   operator: number;

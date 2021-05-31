@@ -1,5 +1,4 @@
 import { inject, injectable } from 'tsyringe';
-import { UpdateResult } from 'typeorm';
 
 import CouponProduct from '../infra/typeorm/entities/CouponProduct';
 import ICouponProductsRepository from '../repositories/ICouponProductsRepository';
@@ -44,32 +43,120 @@ class CreateOrUpdateCouponProductService {
     private couponsProductsRepository: ICouponProductsRepository,
   ) {}
 
-  public async execute(data: IRequest): Promise<CouponProduct | UpdateResult> {
-    const checkCouponProductsExists = await this.couponsProductsRepository.findCouponProducts(
-      data.company_id,
-      data.checkout_id,
-      data.coupon_id,
-      data.erp_product_id,
-      data.bar_code,
-      data.order,
-      data.operator,
-      data.sale_date,
+  public async execute({
+    company_id,
+    checkout_id,
+    coupon_id,
+    operator,
+    coupon,
+    erp_product_id,
+    bar_code,
+    quantity,
+    unit_price,
+    discount,
+    total_price,
+    hour,
+    sale_date,
+    erp_offer_id,
+    is_canceled,
+    order,
+    erp_customer_id,
+    erp_seller_id,
+    erp_department_id,
+    aliquot_icms,
+    normal_price,
+    type_price,
+    type_taxation,
+    model_doc,
+    motive_discount,
+    serie_nf,
+    erp_promo_id,
+    erp_order_id,
+    bc_pis,
+    bc_cofins,
+  }: IRequest): Promise<CouponProduct> {
+    const checkoutCouponProducts = await this.couponsProductsRepository.findCouponProducts(
+      company_id,
+      checkout_id,
+      coupon_id,
+      erp_product_id,
+      bar_code,
+      order,
+      operator,
+      sale_date,
     );
 
-    if (checkCouponProductsExists) {
-      const saleCouponUpdated = await this.couponsProductsRepository.update(
-        checkCouponProductsExists.id,
-        data,
+    if (!checkoutCouponProducts) {
+      const createCheckCouponProducts = await this.couponsProductsRepository.create(
+        {
+          company_id,
+          checkout_id,
+          coupon_id,
+          operator,
+          coupon,
+          erp_product_id,
+          bar_code,
+          quantity,
+          unit_price,
+          discount,
+          total_price,
+          hour,
+          sale_date,
+          erp_offer_id,
+          is_canceled,
+          order,
+          erp_customer_id,
+          erp_seller_id,
+          erp_department_id,
+          aliquot_icms,
+          normal_price,
+          type_price,
+          type_taxation,
+          model_doc,
+          motive_discount,
+          serie_nf,
+          erp_promo_id,
+          erp_order_id,
+          bc_pis,
+          bc_cofins,
+        },
       );
 
-      return saleCouponUpdated;
+      return createCheckCouponProducts;
     }
 
-    const checkoutSaleCoupon = await this.couponsProductsRepository.create(
-      data,
-    );
+    checkoutCouponProducts.company_id = company_id;
+    checkoutCouponProducts.checkout_id = checkout_id;
+    checkoutCouponProducts.coupon_id = coupon_id;
+    checkoutCouponProducts.operator = operator;
+    checkoutCouponProducts.coupon = coupon;
+    checkoutCouponProducts.erp_product_id = erp_product_id;
+    checkoutCouponProducts.bar_code = bar_code;
+    checkoutCouponProducts.quantity = quantity;
+    checkoutCouponProducts.unit_price = unit_price;
+    checkoutCouponProducts.discount = discount;
+    checkoutCouponProducts.total_price = total_price;
+    checkoutCouponProducts.hour = hour;
+    checkoutCouponProducts.sale_date = sale_date;
+    checkoutCouponProducts.erp_offer_id = erp_offer_id;
+    checkoutCouponProducts.is_canceled = is_canceled;
+    checkoutCouponProducts.order = order;
+    checkoutCouponProducts.erp_customer_id = erp_customer_id;
+    checkoutCouponProducts.erp_seller_id = erp_seller_id;
+    checkoutCouponProducts.erp_department_id = erp_department_id;
+    checkoutCouponProducts.aliquot_icms = aliquot_icms;
+    checkoutCouponProducts.normal_price = normal_price;
+    checkoutCouponProducts.type_price = type_price;
+    checkoutCouponProducts.type_taxation = type_taxation;
+    checkoutCouponProducts.model_doc = model_doc;
+    checkoutCouponProducts.motive_discount = motive_discount;
+    checkoutCouponProducts.serie_nf = serie_nf;
+    checkoutCouponProducts.erp_promo_id = erp_promo_id;
+    checkoutCouponProducts.erp_order_id = erp_order_id;
+    checkoutCouponProducts.bc_pis = bc_pis;
+    checkoutCouponProducts.bc_cofins = bc_cofins;
 
-    return checkoutSaleCoupon;
+    return this.couponsProductsRepository.save(checkoutCouponProducts);
   }
 }
 

@@ -12,9 +12,6 @@ class CheckoutSaleCoupons {
   id: string;
 
   @Column()
-  file_path?: string;
-
-  @Column()
   company_id: string;
 
   @Column()

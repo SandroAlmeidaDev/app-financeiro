@@ -54,7 +54,7 @@ class CouponProduct {
   erp_offer_id?: string;
 
   @Column()
-  is_canceled: boolean;
+  cancellation_type: string;
 
   @Column()
   order?: number;

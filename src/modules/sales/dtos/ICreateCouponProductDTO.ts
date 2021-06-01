@@ -13,7 +13,7 @@ export default interface ICreateCouponProductDTO {
   hour: string;
   sale_date: Date;
   erp_offer_id?: string;
-  is_canceled: boolean;
+  cancellation_type: string;
   order?: number;
   erp_customer_id?: number;
   erp_seller_id?: number;

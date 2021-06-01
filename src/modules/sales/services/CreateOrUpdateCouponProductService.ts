@@ -18,7 +18,7 @@ interface IRequest {
   hour: string;
   sale_date: Date;
   erp_offer_id?: string;
-  is_canceled: boolean;
+  cancellation_type: string;
   order: number;
   erp_customer_id?: number;
   erp_seller_id?: number;
@@ -58,7 +58,7 @@ class CreateOrUpdateCouponProductService {
     hour,
     sale_date,
     erp_offer_id,
-    is_canceled,
+    cancellation_type,
     order,
     erp_customer_id,
     erp_seller_id,
@@ -103,7 +103,7 @@ class CreateOrUpdateCouponProductService {
           hour,
           sale_date,
           erp_offer_id,
-          is_canceled,
+          cancellation_type,
           order,
           erp_customer_id,
           erp_seller_id,
@@ -139,7 +139,7 @@ class CreateOrUpdateCouponProductService {
     checkoutCouponProducts.hour = hour;
     checkoutCouponProducts.sale_date = sale_date;
     checkoutCouponProducts.erp_offer_id = erp_offer_id;
-    checkoutCouponProducts.is_canceled = is_canceled;
+    checkoutCouponProducts.cancellation_type = cancellation_type;
     checkoutCouponProducts.order = order;
     checkoutCouponProducts.erp_customer_id = erp_customer_id;
     checkoutCouponProducts.erp_seller_id = erp_seller_id;

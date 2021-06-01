@@ -78,9 +78,9 @@ export default class CreateCouponsProducts1618444833475
             isNullable: true,
           },
           {
-            name: 'is_canceled',
-            type: 'boolean',
-            default: false,
+            name: 'cancellation_type',
+            type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'order',
@@ -110,12 +110,14 @@ export default class CreateCouponsProducts1618444833475
             type: 'decimal',
             precision: 6,
             scale: 2,
+            isNullable: true,
           },
           {
             name: 'normal_price',
             type: 'decimal',
             precision: 20,
             scale: 6,
+            isNullable: true,
           },
           {
             name: 'type_price',

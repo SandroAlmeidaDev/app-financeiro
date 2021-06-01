@@ -123,8 +123,8 @@ function createCouponsProducts() {
     operator=$OPERADOR \
     erp_department_id=$CODDEPTO \
     aliquot_icms=$ALIQICM \
-    normal_price=$PR \
-    type_price=$PRECONOR \
+    normal_price=$PRECONOR \
+    type_price=$TIPOPRECO \
     type_taxation=$TIPTRIB \
     model_doc=$MODELODOC \
     motive_discount=$MOTIDESC \
@@ -142,9 +142,9 @@ function createCouponsProducts() {
     )
 
     if [ ! "${COUPON_ID_API}" == "null" ]; then
-      echo -ne "\tproducts:\n" >> $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA/$COUPON_ID_API.json
-      echo -ne "\t\t$COUPON" | jq . >> $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA/$COUPON_ID_API.json
-      echo -ne "coupon_id: $COUPON_ID_API cupom: $CUPOM e pdv: $NUM_PDV produto: $CODPRO ordem: $ORDEM\n" >> $DIR_FILES/$CNPJ_FILIAL/importacao-`date +%Y-%m-%d`.log
+      echo -ne "\tproducts:\n" >> $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA/$COUPON_ID_API.json
+      echo -ne "\t\t$COUPON" | jq . >> $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA/$COUPON_ID_API.json
+      echo -ne "coupon_id: $COUPON_ID_API cupom: $CUPOM e pdv: $NUMERO_PDV produto: $CODPRO ordem: $ORDEM\n" >> $DIR_FILES/$CNPJ_FILIAL/importacao-`date +%Y-%m-%d`.log
     fi
 
   done

@@ -88,6 +88,8 @@ function createCheckoutSalesTransactions() {
       echo -ne "\t\t$TRANSACTION_COUPON\n" | jq . >> $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA/$COUPON_ID_API.json
     fi
   done
+
+  exit 0
 }
 
 function createCouponsProducts() {
@@ -148,6 +150,8 @@ function createCouponsProducts() {
     fi
 
   done
+
+  exit 0
 }
 
 function createCheckoutSales() {
@@ -179,6 +183,8 @@ function createCheckoutSales() {
     createCheckoutSalesTransactions $COUPON_ID_API $CUPOM
     createCouponsProducts $COUPON_ID_API $CUPOM
   fi
+
+  exit 0
 }
 
 
@@ -193,6 +199,15 @@ function readFIPDV() {
     CNPJ_FILIAL=$(cdbflites cadfil.dbf /TRIM:all /DELETED- /FILTER:codfil99=$COD_FILIAL /SELECT:CGCFIL99)
     PDVS=$(cdbflites tabpdv.dbf /TRIM:all /DELETED- /FILTER:filial=$COD_FILIAL /ORDER:numero /SELECT:numero /SORT:numero |sed 's/^ *//g' |sed 's/[^0-9]//g' |sed '/^$/d')
     COMPANY_ID=$(cat $DIR_FILES/$CNPJ_FILIAL/config/config-api-filial-$CNPJ_FILIAL.ini | grep "COMPANY-ID-API" | cut -d "=" -f2)
+
+    if [[ -f $DIR_FILES/$CNPJ_FILIAL/processo.pid ]]; then
+      PID_FILE=$(cat $DIR_FILES/$CNPJ_FILIAL/processo.pid)
+      kill $PID_FILE
+
+      echo $$ > $DIR_FILES/$CNPJ_FILIAL/processo.pid
+    else
+      echo $$ > $DIR_FILES/$CNPJ_FILIAL/processo.pid
+    fi
 
     for PDV in ${PDVS}; do
       cd $DIR_DBF
@@ -306,7 +321,12 @@ function readFIPDV() {
         fi
       done
     done
+
+    rm -f $DIR_FILES/$CNPJ_FILIAL/processo.pid
   done
+
+
+  exit 0
 }
 
 readFIPDV $*

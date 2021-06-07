@@ -88,8 +88,6 @@ function createCheckoutSalesTransactions() {
       echo -ne "\t\t$TRANSACTION_COUPON\n" | jq . >> $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA/$COUPON_ID_API.json
     fi
   done
-
-  exit 0
 }
 
 function createCouponsProducts() {
@@ -150,8 +148,6 @@ function createCouponsProducts() {
     fi
 
   done
-
-  exit 0
 }
 
 function createCheckoutSales() {
@@ -183,8 +179,6 @@ function createCheckoutSales() {
     createCheckoutSalesTransactions $COUPON_ID_API $CUPOM
     createCouponsProducts $COUPON_ID_API $CUPOM
   fi
-
-  exit 0
 }
 
 
@@ -324,7 +318,6 @@ function readFIPDV() {
 
     rm -f $DIR_FILES/$CNPJ_FILIAL/processo.pid
   done
-
 
   exit 0
 }

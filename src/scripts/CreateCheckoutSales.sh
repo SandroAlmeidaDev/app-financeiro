@@ -57,6 +57,9 @@ function httpAPIRequest() {
   else
     COUPON_ID_API=$(cat $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA_VENDA/$CUPOM-$ORDEM.output | jq -r .id)
     echo -ne "`date +"%T.%3N"` - Importado $OPERACAO $ORDEM do cupom: $CUPOM e pdv: $NUM_PDV\n" >> $DIR_FILES/$CNPJ_FILIAL/importacao-`date +%Y-%m-%d`.log
+
+    rm -f $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA_VENDA/$CUPOM-$ORDEM.output
+    rm -f $JSON_FILE
   fi
 }
 

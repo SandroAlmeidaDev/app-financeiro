@@ -24,11 +24,44 @@ fi
 #Arquivos
 DIR_FILES="$HOME/vendas_pdvs"
 
-
 [[ ! -d $DIR_FILES ]] && mkdir -p $DIR_FILES
 
+function httpAPIRequest() {
+  PATH_URL=$1
+  JSON_FILE=$2
+  CNPJ_FILIAL=$3
+  DATA_VENDA=$4
+  NUM_PDV=$5
+  CUPOM=$6
+  ORDEM=$7
+  OPERACAO=$8
+
+  curl http://localhost:9090/$PATH_URL \
+    --silent \
+    --insecure \
+    --request POST \
+    --header "content-type: application/json" \
+    --data @$JSON_FILE \
+    --output $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA_VENDA/$CUPOM-$ORDEM.output \
+    --write-out %{http_code} \
+    > $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA_VENDA/http.response.code 2> $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA_VENDA/error.messages
+  errorLevel=$?
+  httpResponse=$(cat $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA_VENDA/http.response.code)
+
+
+  jq --raw-output 'keys | @csv' $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA_VENDA/$CUPOM-$ORDEM.output | sed 's/"//g' > $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA_VENDA/return.keys
+  hasErrors=`grep --quiet --invert errors $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA_VENDA/return.keys;echo $?`
+
+  if [[ $errorLevel -gt 0 ]] || [[ $hasErrors -gt 0 ]] || [[ "$httpResponse" != "200" ]]; then
+    echo -ne "Error $errorLevel, pdv: $NUM_PDV cupom: $CUPOM http response code $httpResponse\n" >> $DIR_FILES/$CNPJ_FILIAL/error-`date +%Y-%m-%d`.log
+  else
+    COUPON_ID_API=$(cat $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA_VENDA/$CUPOM-$ORDEM.output | jq -r .id)
+    echo -ne "`date +"%T.%3N"` - Importado $OPERACAO $ORDEM do cupom: $CUPOM e pdv: $NUM_PDV\n" >> $DIR_FILES/$CNPJ_FILIAL/importacao-`date +%Y-%m-%d`.log
+  fi
+}
+
 function createCheckoutSalesTransactions() {
-  COUPON_ID_API=$1
+  COUPON_ID=$1
   CUPOM=$2
 
   TRANSACTIONS_CUPOM=$(cdbflites fi$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:cupom=$CUPOM /SELECT:OPERADOR','ORIGEM','CUPOM','DEBI_CRED','ORDEM','EMPCONV','NUMAUTORI','BINCARTAO','NSU','BANDEIRA','CNPJCRED','ESPECIE','CANCELADO','OBSERVACAO','DATA','HORARIO','CGCCPF','NOMECLI','VALOR','TIPODOC)
@@ -57,7 +90,7 @@ function createCheckoutSalesTransactions() {
 
     jo -p company_id=$COMPANY_ID \
     checkout_id=$CHECKOUT_ID_API \
-    coupon_id=$COUPON_ID_API \
+    coupon_id=$COUPON_ID \
     operator=$OPERADOR \
     coupon=$CUPOM \
     type=$TIPODOC \
@@ -77,21 +110,12 @@ function createCheckoutSalesTransactions() {
 
     JSON_FILE="$DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/request/$DATA/transactions-cupom-$CUPOM-$ORDEM.json"
 
-	  TRANSACTION_COUPON=$(curl -s -X POST "$BASE_URL/checkouts/coupons/transactions" \
-		      -H "content-type: application/json" \
- 		      -d @$JSON_FILE
-        )
-    TRANSACTION_COUPON_ID_API=$(echo $TRANSACTION_COUPON | jq -r '.id')
-
-    if [ ! "${TRANSACTION_COUPON_ID_API}" == "null" ]; then
-      echo -ne "\ttransactions:\n" >> $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA/$COUPON_ID_API.json
-      echo -ne "\t\t$TRANSACTION_COUPON\n" | jq . >> $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA/$COUPON_ID_API.json
-    fi
+	  httpAPIRequest 'checkouts/coupons/transactions' $JSON_FILE $CNPJ_FILIAL $DATA $NUM_PDV $CUPOM $ORDEM 'PAGAMENTO'
   done
 }
 
 function createCouponsProducts() {
-  COUPON_ID_API=$1
+  COUPON_ID=$1
   CUPOM=$2
 
   PRODUTOS_CUPOM=$(cdbflites ff$DIA_MES$PDV.dbf /TRIM:all /DELETED- /FILTER:ncupom=$CUPOM /SELECT:CODPRO','QTDEVEND','TOTVEND','NUMECR','NCUPOM','HORARIO','DATA','CDMOTOFE','CANCELADO','ORDEM','STATUS','CLIENTE','VENDEDOR','OPERADOR','CODDEPTO','VASILHAME','MOTICANCEL','TURNO','SUPERVISOR','CODBARRA','PRECO2','DESCONTO','LANSAI','ORDEMNOTA','ALIQICM','CODBOMBA','ENCERRA','LOTE','HORAFINAL','CODPROCOMP','ORDEMCOMP','PRECOUNIT','COMISJADEF','PERCCOMIS','CODPROC','QTDEVENDC','TOTVENDC','ALIQICMC','CANCELADOC','PRECONOR','TIPOPRECO','TIPTRIB','ACREDESCIT','PONTOSDOTZ','VALORPROMC','QTDEPROMOC','MODELODOC','MOTIDESC','SERIENFCE','QTDECESPDV','VALREEMB','CODFORN','IDPROMO','QTDDESPRIN','ALIQFECOP','REDUICMS','BCICMS','NUMPED','CODPROM','CODEANTRIB','BCPIS','BCCOFINS','CODBENEF','MOTIDESC2 | tr -d ' ')
@@ -105,7 +129,7 @@ function createCouponsProducts() {
 
     jo -p company_id=$COMPANY_ID \
     checkout_id=$CHECKOUT_ID_API \
-    coupon_id=$COUPON_ID_API \
+    coupon_id=$COUPON_ID \
     coupon=$CUPOM \
     erp_product_id=$CODPRO \
     bar_code=$CODBARRA \
@@ -134,50 +158,32 @@ function createCouponsProducts() {
     bc_pis=$BCPIS \
     bc_cofins=$BCCOFINS > $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/request/$DATA/produto-cupom-$CUPOM-$ORDEM.json
 
-    JSON_FILE="$DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/request/$DATA_VENDA/produto-cupom-$CUPOM-$ORDEM.json"
+    JSON_FILE="$DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/request/$DATA_VENDA/produto-cupom-$CUPOM-$ORDEM.json"
 
-	  COUPON=$(curl -s -X POST "$BASE_URL/checkouts/coupons/products" \
-		  -H "content-type: application/json" \
- 		  -d @$JSON_FILE
-    )
-
-    if [ ! "${COUPON_ID_API}" == "null" ]; then
-      echo -ne "\tproducts:\n" >> $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA/$COUPON_ID_API.json
-      echo -ne "\t\t$COUPON" | jq . >> $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA/$COUPON_ID_API.json
-      echo -ne "coupon_id: $COUPON_ID_API cupom: $CUPOM e pdv: $NUMERO_PDV produto: $CODPRO ordem: $ORDEM\n" >> $DIR_FILES/$CNPJ_FILIAL/importacao-`date +%Y-%m-%d`.log
-    fi
-
+    httpAPIRequest 'checkouts/coupons/products' $JSON_FILE $CNPJ_FILIAL $DATA_VENDA $NUM_PDV $CUPOM $ORDEM 'PRODUTO'
   done
 }
 
 function createCheckoutSales() {
   CNPJ_FILIAL=$1
-  NUMERO_PDV=$2
+  NUM_PDV=$2
   CUPOM=$3
   ORDEM=$4
   TIPODOC=$5
 
   [[ ! -d $DIR_FILES/$CNPJ_FILIAL/config ]] && mkdir -p $DIR_FILES/$CNPJ_FILIAL/config
-  [[ ! -d $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA ]] && mkdir -p $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA
+  [[ ! -d $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA_VENDA ]] && mkdir -p $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA_VENDA
 
 
-  JSON_FILE="$DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/request/$DATA_VENDA/cupom-$CUPOM-$ORDEM.json"
+  JSON_FILE="$DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/request/$DATA_VENDA/cupom-$CUPOM-$ORDEM.json"
 
-	COUPON=$(curl -s -X POST "$BASE_URL/checkouts/sales/coupons" \
-		-H "content-type: application/json" \
- 		-d @$JSON_FILE
-  )
-
-  COUPON_ID_API=$(echo $COUPON | jq -r '.id')
+  httpAPIRequest 'checkouts/sales/coupons' $JSON_FILE $CNPJ_FILIAL $DATA_VENDA $NUM_PDV $CUPOM $ORDEM 'VENDA'
 
   if [ ! "${COUPON_ID_API}" == "null" ]; then
-    echo -ne "coupon:\n" > $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA/$COUPON_ID_API.json
-    echo -ne "$COUPON\n" | jq . >> $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA/$COUPON_ID_API.json
-    echo -ne "$COUPON" | jq . > $DIR_FILES/$CNPJ_FILIAL/pdv-$NUMERO_PDV/response/$DATA_VENDA/ultimo_cupom.json
-    echo -ne "coupon_id: $COUPON_ID_API cupom: $CUPOM e pdv: $NUM_PDV\n" >> $DIR_FILES/$CNPJ_FILIAL/importacao-`date +%Y-%m-%d`.log
+    jo -p coupon=$CUPOM > $DIR_FILES/$CNPJ_FILIAL/pdv-$NUM_PDV/response/$DATA_VENDA/ultimo_cupom.json
 
-    createCheckoutSalesTransactions $COUPON_ID_API $CUPOM
     createCouponsProducts $COUPON_ID_API $CUPOM
+    createCheckoutSalesTransactions $COUPON_ID_API $CUPOM
   fi
 }
 

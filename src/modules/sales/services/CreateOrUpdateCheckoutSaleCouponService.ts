@@ -1,3 +1,4 @@
+import AppError from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
 
 import CheckoutSaleCoupon from '../infra/typeorm/entities/CheckoutSaleCoupon';
@@ -43,32 +44,44 @@ class CreateOrUpdateCheckoutSaleCouponService {
     total_discount,
     total_addition,
   }: IRequest): Promise<CheckoutSaleCoupon> {
-    const checkoutSaleCoupon = await this.checkoutsSalesCouponsRepository.findByCompanyIdCheckoutCoupon(
-      company_id,
-      checkout_id,
-      coupon,
-      sale_date,
-    );
+    let checkoutSaleCoupon = null;
+
+    try {
+      checkoutSaleCoupon = await this.checkoutsSalesCouponsRepository.findByCompanyIdCheckoutCoupon(
+        company_id,
+        checkout_id,
+        coupon,
+        sale_date,
+      );
+    } catch (error) {
+      throw new AppError('There was an error getting coupon');
+    }
 
     if (!checkoutSaleCoupon) {
-      const CreateCheckoutSaleCoupon = await this.checkoutsSalesCouponsRepository.create(
-        {
-          company_id,
-          checkout_id,
-          operator,
-          coupon,
-          type,
-          origin,
-          status,
-          sale_date,
-          time_start,
-          customer_id,
-          customer_name,
-          total_coupon,
-          total_discount,
-          total_addition,
-        },
-      );
+      let CreateCheckoutSaleCoupon = null;
+
+      try {
+        CreateCheckoutSaleCoupon = await this.checkoutsSalesCouponsRepository.create(
+          {
+            company_id,
+            checkout_id,
+            operator,
+            coupon,
+            type,
+            origin,
+            status,
+            sale_date,
+            time_start,
+            customer_id,
+            customer_name,
+            total_coupon,
+            total_discount,
+            total_addition,
+          },
+        );
+      } catch (error) {
+        throw new AppError('There was an error creating a new coupon.');
+      }
 
       return CreateCheckoutSaleCoupon;
     }

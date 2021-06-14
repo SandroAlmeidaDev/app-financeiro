@@ -1,3 +1,4 @@
+import AppError from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
 
 import CouponProduct from '../infra/typeorm/entities/CouponProduct';
@@ -75,52 +76,64 @@ class CreateOrUpdateCouponProductService {
     bc_pis,
     bc_cofins,
   }: IRequest): Promise<CouponProduct> {
-    const checkoutCouponProducts = await this.couponsProductsRepository.findCouponProducts(
-      company_id,
-      checkout_id,
-      coupon_id,
-      erp_product_id,
-      bar_code,
-      order,
-      operator,
-      sale_date,
-    );
+    let checkoutCouponProducts = null;
+
+    try {
+      checkoutCouponProducts = await this.couponsProductsRepository.findCouponProducts(
+        company_id,
+        checkout_id,
+        coupon_id,
+        erp_product_id,
+        bar_code,
+        order,
+        operator,
+        sale_date,
+      );
+    } catch (error) {
+      throw new AppError('There was an error searching for coupon products.');
+    }
 
     if (!checkoutCouponProducts) {
-      const createCheckCouponProducts = await this.couponsProductsRepository.create(
-        {
-          company_id,
-          checkout_id,
-          coupon_id,
-          operator,
-          coupon,
-          erp_product_id,
-          bar_code,
-          quantity,
-          unit_price,
-          discount,
-          total_price,
-          hour,
-          sale_date,
-          erp_offer_id,
-          cancellation_type,
-          order,
-          erp_customer_id,
-          erp_seller_id,
-          erp_department_id,
-          aliquot_icms,
-          normal_price,
-          type_price,
-          type_taxation,
-          model_doc,
-          motive_discount,
-          serie_nf,
-          erp_promo_id,
-          erp_order_id,
-          bc_pis,
-          bc_cofins,
-        },
-      );
+      let createCheckCouponProducts = null;
+
+      try {
+        createCheckCouponProducts = await this.couponsProductsRepository.create(
+          {
+            company_id,
+            checkout_id,
+            coupon_id,
+            operator,
+            coupon,
+            erp_product_id,
+            bar_code,
+            quantity,
+            unit_price,
+            discount,
+            total_price,
+            hour,
+            sale_date,
+            erp_offer_id,
+            cancellation_type,
+            order,
+            erp_customer_id,
+            erp_seller_id,
+            erp_department_id,
+            aliquot_icms,
+            normal_price,
+            type_price,
+            type_taxation,
+            model_doc,
+            motive_discount,
+            serie_nf,
+            erp_promo_id,
+            erp_order_id,
+            bc_pis,
+            bc_cofins,
+          },
+        );
+      } catch (error) {
+        throw new AppError('There was an error creating the coupon products.');
+      }
 
       return createCheckCouponProducts;
     }

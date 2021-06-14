@@ -1,10 +1,15 @@
 import { inject, injectable } from 'tsyringe';
+import { promisify } from 'util';
 import { createReadStream } from 'fs';
-import csvParse from 'csv-parse';
+
+import { pipeline } from 'stream';
+
 import { StringStream } from 'scramjet';
 
 import CheckoutSaleCoupon from '../infra/typeorm/entities/CheckoutSaleCoupon';
 import ICheckoutsSalesCouponsRepository from '../repositories/ICheckoutsSalesCouponsRepository';
+
+const pipelineAsync = promisify(pipeline);
 
 interface IRequest {
   file_path: string;
@@ -42,7 +47,7 @@ class ImportCheckoutSalesCouponsService {
 
     console.log(parseCSV);
 
-    return parseCSV;
+    await pipelineAsync(checkoutSaleCouponReadStream);
   }
 }
 

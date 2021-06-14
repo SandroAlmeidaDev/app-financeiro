@@ -1,3 +1,4 @@
+import AppError from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
 
 import CheckoutTransaction from '../infra/typeorm/entities/CheckoutTransaction';
@@ -55,42 +56,56 @@ class CreateOrUpdateCheckoutTransactionService {
     card_cnpj,
     note,
   }: IRequest): Promise<CheckoutTransaction> {
-    const checkoutTransaction = await this.checkoutsTransactionsRepository.findTransaction(
-      company_id,
-      checkout_id,
-      coupon_id,
-      type,
-      origin,
-      pay_type,
-      total,
-      sale_date,
-    );
+    let checkoutTransaction = null;
+
+    try {
+      checkoutTransaction = await this.checkoutsTransactionsRepository.findTransaction(
+        company_id,
+        checkout_id,
+        coupon_id,
+        type,
+        origin,
+        pay_type,
+        total,
+        sale_date,
+      );
+    } catch (error) {
+      throw new AppError(
+        'There was an error searching for coupon transactions.',
+      );
+    }
 
     if (!checkoutTransaction) {
-      const createCheckoutTransaction = await this.checkoutsTransactionsRepository.create(
-        {
-          company_id,
-          checkout_id,
-          coupon_id,
-          operator,
-          coupon,
-          type,
-          sale_date,
-          cancellation_status,
-          origin,
-          pay_type,
-          total,
-          order,
-          parcel,
-          covenant_company,
-          authorization_number,
-          bin_cart,
-          nsu,
-          card_banner,
-          card_cnpj,
-          note,
-        },
-      );
+      let createCheckoutTransaction = null;
+
+      try {
+        createCheckoutTransaction = await this.checkoutsTransactionsRepository.create(
+          {
+            company_id,
+            checkout_id,
+            coupon_id,
+            operator,
+            coupon,
+            type,
+            sale_date,
+            cancellation_status,
+            origin,
+            pay_type,
+            total,
+            order,
+            parcel,
+            covenant_company,
+            authorization_number,
+            bin_cart,
+            nsu,
+            card_banner,
+            card_cnpj,
+            note,
+          },
+        );
+      } catch (error) {
+        throw new AppError('There was an error creating coupon transactions.');
+      }
 
       return createCheckoutTransaction;
     }

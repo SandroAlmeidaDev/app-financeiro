@@ -1,3 +1,4 @@
+import AppError from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
 
 import Checkout from '../infra/typeorm/entities/Checkout';
@@ -21,17 +22,29 @@ class CreateOrUpdateCheckoutService {
     number,
     status,
   }: IRequest): Promise<Checkout> {
-    const checkout = await this.checkoutsRepository.findByCompanyIdNumber(
-      company_id,
-      number,
-    );
+    let checkout = null;
 
-    if (!checkout) {
-      const createCheckout = await this.checkoutsRepository.create({
+    try {
+      checkout = await this.checkoutsRepository.findByCompanyIdNumber(
         company_id,
         number,
-        status,
-      });
+      );
+    } catch (error) {
+      throw new AppError('There was an error fetching checkout.');
+    }
+
+    if (!checkout) {
+      let createCheckout = null;
+
+      try {
+        createCheckout = await this.checkoutsRepository.create({
+          company_id,
+          number,
+          status,
+        });
+      } catch (error) {
+        throw new AppError('There was an error creating checkout.');
+      }
 
       return createCheckout;
     }

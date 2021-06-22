@@ -241,9 +241,9 @@ function readFIPDV() {
               ULTIMO_CUPOM=0
             fi
 
-            #Envia os ultimos 5 cupons de venda
-            if [[ $ULTIMO_CUPOM -ge 5 ]]; then
-              ULTIMO_CUPOM=$(echo "$ULTIMO_CUPOM-5"| bc -l)
+            #Envia os ultimos  cupons de venda
+            if [[ $ULTIMO_CUPOM -ge 1 ]]; then
+              ULTIMO_CUPOM=$(echo "$ULTIMO_CUPOM-1"| bc -l)
             else
               ULTIMO_CUPOM=0
             fi

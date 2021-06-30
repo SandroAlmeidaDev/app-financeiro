@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
 import { parseISO } from 'date-fns';
 
 import CreateOrUpdateCouponProductService from '@modules/sales/services/CreateOrUpdateCouponProductService';
-
-import { container } from 'tsyringe';
 
 export default class CouponProductsController {
   public async create(request: Request, response: Response): Promise<Response> {

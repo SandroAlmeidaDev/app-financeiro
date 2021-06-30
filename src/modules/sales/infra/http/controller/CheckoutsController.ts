@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
 
 import CreateOrUpdateCheckoutService from '@modules/sales/services/CreateOrUpdateCheckoutService';
-
-import { container } from 'tsyringe';
 
 export default class CheckoutsController {
   public async create(request: Request, response: Response): Promise<Response> {

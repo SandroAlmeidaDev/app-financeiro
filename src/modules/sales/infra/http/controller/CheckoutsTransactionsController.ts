@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
 import { parseISO } from 'date-fns';
 
 import CreateOrUpdateCheckoutTransactionService from '@modules/sales/services/CreateOrUpdateCheckoutTransactionService';
-
-import { container } from 'tsyringe';
 
 export default class CheckoutsTransactionsController {
   public async create(request: Request, response: Response): Promise<Response> {

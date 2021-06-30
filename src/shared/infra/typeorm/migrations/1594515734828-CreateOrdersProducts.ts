@@ -50,7 +50,7 @@ export default class CreateOrdersProducts1594515734828
             referencedColumnNames: ['id'],
             referencedTableName: 'products',
             onUpdate: 'CASCADE',
-            onDelete: 'SET NULL',
+            onDelete: 'CASCADE',
           },
           {
             name: 'OrderId',
@@ -58,7 +58,7 @@ export default class CreateOrdersProducts1594515734828
             referencedColumnNames: ['id'],
             referencedTableName: 'orders',
             onUpdate: 'CASCADE',
-            onDelete: 'SET NULL',
+            onDelete: 'CASCADE',
           },
         ],
       }),

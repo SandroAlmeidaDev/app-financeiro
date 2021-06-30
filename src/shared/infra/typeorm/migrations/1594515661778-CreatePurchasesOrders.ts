@@ -15,7 +15,7 @@ export default class CreatePurchaseOrders1594515661778
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'comapany_id',
+            name: 'company_id',
             type: 'uuid',
           },
           {
@@ -32,11 +32,11 @@ export default class CreatePurchaseOrders1594515661778
         foreignKeys: [
           {
             name: 'CompanyId',
-            columnNames: ['comapany_id'],
+            columnNames: ['company_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'companies',
             onUpdate: 'CASCADE',
-            onDelete: 'SET NULL',
+            onDelete: 'CASCADE',
           },
         ],
       }),

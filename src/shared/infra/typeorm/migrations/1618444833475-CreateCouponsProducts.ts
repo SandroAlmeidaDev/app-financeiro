@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
 
 export default class CreateCouponsProducts1618444833475
   implements MigrationInterface {
@@ -186,7 +186,7 @@ export default class CreateCouponsProducts1618444833475
             referencedColumnNames: ['id'],
             referencedTableName: 'companies',
             onUpdate: 'CASCADE',
-            onDelete: 'SET NULL',
+            onDelete: 'CASCADE',
           },
           {
             name: 'CheckoutsCouponsProducts',
@@ -194,7 +194,7 @@ export default class CreateCouponsProducts1618444833475
             referencedColumnNames: ['id'],
             referencedTableName: 'checkouts',
             onUpdate: 'CASCADE',
-            onDelete: 'SET NULL',
+            onDelete: 'CASCADE',
           },
           {
             name: 'CheckoutsSalesCoupons',
@@ -202,8 +202,25 @@ export default class CreateCouponsProducts1618444833475
             referencedColumnNames: ['id'],
             referencedTableName: 'checkouts_sales_coupons',
             onUpdate: 'CASCADE',
-            onDelete: 'SET NULL',
+            onDelete: 'CASCADE',
           },
+        ],
+      }),
+    );
+
+    await queryRunner.createIndex(
+      'coupons_products',
+      new TableIndex({
+        name: 'IDX_COUPON_PRODUCT_UNIQUE',
+        columnNames: [
+          'company_id',
+          'checkout_id',
+          'operator',
+          'coupon',
+          'sale_date',
+          'order',
+          'bar_code',
+          'erp_product_id',
         ],
       }),
     );

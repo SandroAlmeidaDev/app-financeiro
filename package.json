@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@sentry/node": "^5.29.2",
-    "aws-sdk": "^2.729.0",
+    "aws-sdk": "^2.932.0",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "celebrate": "^12.2.0",

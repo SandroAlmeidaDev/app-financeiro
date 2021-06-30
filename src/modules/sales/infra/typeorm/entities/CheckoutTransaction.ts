@@ -4,9 +4,24 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  Index,
 } from 'typeorm';
 
 @Entity('checkouts_transactions')
+@Index(
+  [
+    'company_id',
+    'checkout_id',
+    'operator',
+    'coupon',
+    'sale_date',
+    'order',
+    'type',
+  ],
+  {
+    unique: true,
+  },
+)
 class CheckoutTransaction {
   @PrimaryGeneratedColumn('uuid')
   id: string;

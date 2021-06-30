@@ -4,9 +4,26 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  Index,
 } from 'typeorm';
 
 @Entity('coupons_products')
+@Index(
+  [
+    'company_id',
+    'checkout_id',
+    'coupon_id',
+    'operator',
+    'bar_code',
+    'erp_product_id',
+    'coupon',
+    'sale_date',
+    'order',
+  ],
+  {
+    unique: true,
+  },
+)
 class CouponProduct {
   @PrimaryGeneratedColumn('uuid')
   id: string;

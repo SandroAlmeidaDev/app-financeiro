@@ -1,6 +1,7 @@
-import AppError from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
+import AppError from '@shared/errors/AppError';
 
+import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
 import CheckoutSaleCoupon from '../infra/typeorm/entities/CheckoutSaleCoupon';
 import ICheckoutsSalesCouponsRepository from '../repositories/ICheckoutsSalesCouponsRepository';
 
@@ -26,6 +27,9 @@ class CreateOrUpdateCheckoutSaleCouponService {
   constructor(
     @inject('CheckoutsSalesCouponsRepository')
     private checkoutsSalesCouponsRepository: ICheckoutsSalesCouponsRepository,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({

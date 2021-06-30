@@ -1,12 +1,16 @@
 import {
   Entity,
   Column,
+  Index,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('checkouts_sales_coupons')
+@Index(['company_id', 'checkout_id', 'operator', 'coupon', 'sale_date'], {
+  unique: true,
+})
 class CheckoutSaleCoupons {
   @PrimaryGeneratedColumn('uuid')
   id: string;

@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
 
 export default class CreateCheckoutsTransactions1618432400232
   implements MigrationInterface {
@@ -130,7 +130,7 @@ export default class CreateCheckoutsTransactions1618432400232
             referencedColumnNames: ['id'],
             referencedTableName: 'companies',
             onUpdate: 'CASCADE',
-            onDelete: 'SET NULL',
+            onDelete: 'CASCADE',
           },
           {
             name: 'CheckoutsTransaction',
@@ -138,8 +138,24 @@ export default class CreateCheckoutsTransactions1618432400232
             referencedColumnNames: ['id'],
             referencedTableName: 'checkouts',
             onUpdate: 'CASCADE',
-            onDelete: 'SET NULL',
+            onDelete: 'CASCADE',
           },
+        ],
+      }),
+    );
+
+    await queryRunner.createIndex(
+      'checkouts_transactions',
+      new TableIndex({
+        name: 'IDX_TRANSACTION_COUPON_UNIQUE',
+        columnNames: [
+          'company_id',
+          'checkout_id',
+          'operator',
+          'coupon',
+          'sale_date',
+          'order',
+          'type',
         ],
       }),
     );

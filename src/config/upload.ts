@@ -45,7 +45,7 @@ export default {
   config: {
     disk: {},
     aws: {
-      bucket: 'arena-bet',
+      bucket: process.env.AWS_BUCKET_NAME || 'app-financeiro',
     },
   },
 } as IUploadConfig;

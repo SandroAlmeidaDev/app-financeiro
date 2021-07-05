@@ -55,6 +55,10 @@ function readTabpdv() {
       fi
 
       NUMERO=$(echo $NUMERO| tr -d ' ')
+      if [[ $NUMERO -lt 10 ]]; then
+        NUMERO=0$NUMERO
+      fi
+
       CHECKOUT_ID_API=$(cat $DIR_FILES/$CNPJ_FILIAL/config/config-api-filial-$CNPJ_FILIAL.ini | grep "CHECKOUT-$NUMERO-ID-API" | cut -d "=" -f2)
 
       if [[ ! -z $COMPANY_ID ]]; then

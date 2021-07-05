@@ -6,6 +6,7 @@ if [[ $1 == "/r" ]]; then
   read -p "Filiais: " COD_FILIAIS
   read -p "Ano....: " ANO
   read -p "Dia mes: " DIAS_MESES
+  read -p "PDVs...: " PDVS
   read -p "Sistema: " DIR_DBF
   REPROCESSAR=true
 elif [[ ! $# -eq 2 ]]; then
@@ -200,7 +201,13 @@ function readFIPDV() {
     cd $DIR_DBF
 
     CNPJ_FILIAL=$(cdbflites cadfil.dbf /TRIM:all /DELETED- /FILTER:codfil99=$COD_FILIAL /SELECT:CGCFIL99)
-    PDVS=$(cdbflites tabpdv.dbf /TRIM:all /DELETED- /FILTER:filial=$COD_FILIAL /ORDER:numero /SELECT:numero /SORT:numero |sed 's/^ *//g' |sed 's/[^0-9]//g' |sed '/^$/d')
+
+    if [[ ${REPROCESSAR} == true ]]; then
+      PDVS=$PDVS
+    else
+      PDVS=$(cdbflites tabpdv.dbf /TRIM:all /DELETED- /FILTER:filial=$COD_FILIAL /ORDER:numero /SELECT:numero /SORT:numero |sed 's/^ *//g' |sed 's/[^0-9]//g' |sed '/^$/d')
+    fi
+
     COMPANY_ID=$(cat $DIR_FILES/$CNPJ_FILIAL/config/config-api-filial-$CNPJ_FILIAL.ini | grep "COMPANY-ID-API" | cut -d "=" -f2)
 
     if [[ -f $DIR_FILES/$CNPJ_FILIAL/processo.pid ]]; then
@@ -241,9 +248,9 @@ function readFIPDV() {
               ULTIMO_CUPOM=0
             fi
 
-            #Envia os ultimos  cupons de venda
+            #Envia os ultimos cupons de venda
             if [[ $ULTIMO_CUPOM -ge 1 ]]; then
-              ULTIMO_CUPOM=$(echo "$ULTIMO_CUPOM-1"| bc -l)
+              ULTIMO_CUPOM=$ULTIMO_CUPOM
             else
               ULTIMO_CUPOM=0
             fi
